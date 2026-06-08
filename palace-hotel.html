@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palace Hotel & Spa · Termas de São Vicente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0d0b;
+      --bg2: #131210;
+      --bg3: #1a1814;
+      --olive: #8a8a6a;
+      --olive-light: #b0b090;
+      --olive-dim: #5a5a45;
+      --warm: #c8b898;
+      --warm-light: #e8d8b8;
+      --text: #f0ece4;
+      --text-dim: rgba(240,236,228,0.55);
+      --text-muted: rgba(240,236,228,0.3);
+      --border: rgba(240,236,228,0.08);
+      --border-warm: rgba(200,184,152,0.2);
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* ── CURSOR ── */
+    * { cursor: default; }
+    a, button { cursor: pointer; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.8rem 3rem;
+      transition: background 0.5s, padding 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(14,13,11,0.92);
+      padding: 1.2rem 3rem;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-menu {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-dim); background: none; border: none;
+      transition: color 0.2s;
+    }
+    .nav-menu:hover { color: var(--text); }
+    .nav-menu-lines { display: flex; flex-direction: column; gap: 4px; }
+    .nav-menu-lines span {
+      display: block; width: 20px; height: 1px; background: currentColor;
+      transition: all 0.3s;
+    }
+    .nav-menu-lines span:last-child { width: 13px; }
+    .nav-logo {
+      font-family: var(--serif); font-size: 0.95rem; font-weight: 400;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      position: absolute; left: 50%; transform: translateX(-50%);
+    }
+    .nav-right { display: flex; align-items: center; gap: 2.5rem; }
+    .nav-link {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-book {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--bg); background: var(--warm);
+      border: none; padding: 0.65rem 1.6rem;
+      border-radius: 100px; transition: all 0.3s;
+      text-decoration: none;
+    }
+    .nav-book:hover { background: var(--warm-light); }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh; min-height: 700px;
+      position: relative; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom,
+          rgba(10,9,7,0.25) 0%,
+          rgba(10,9,7,0.0) 40%,
+          rgba(10,9,7,0.15) 70%,
+          rgba(10,9,7,0.7) 100%),
+        url('./hotel-hero.jpg') center/cover no-repeat;
+      transform: scale(1.05);
+      animation: heroZoom 12s ease-out forwards;
+    }
+    @keyframes heroZoom {
+      from { transform: scale(1.05); }
+      to   { transform: scale(1.0); }
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      padding: 0 2rem; width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 0.62rem; letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--olive-light); margin-bottom: 1.8rem;
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; display: block; width: 40px; height: 1px; background: var(--olive-dim);
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-weight: 900; line-height: 0.92;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 60px rgba(0,0,0,0.4);
+    }
+    .hero-title-sub {
+      font-family: var(--serif);
+      font-size: clamp(1.2rem, 3vw, 2.4rem);
+      font-weight: 400; font-style: italic;
+      color: var(--warm); letter-spacing: 0.04em;
+      margin-bottom: 4rem;
+    }
+
+    /* ── BOOKING INLINE ── */
+    .hero-booking {
+      position: relative; z-index: 2;
+      display: flex; align-items: center;
+      background: rgba(14,13,11,0.65);
+      border: 1px solid var(--border-warm);
+      backdrop-filter: blur(16px);
+      border-radius: 100px;
+      padding: 0.5rem 0.5rem 0.5rem 2rem;
+      gap: 0;
+      margin-bottom: 4rem;
+    }
+    .bk-field {
+      display: flex; flex-direction: column;
+      padding: 0.4rem 2rem 0.4rem 0;
+      border-right: 1px solid var(--border-warm);
+      min-width: 130px;
+    }
+    .bk-field:last-of-type { border-right: none; padding-right: 1.5rem; }
+    .bk-label {
+      font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--olive-light); margin-bottom: 0.2rem;
+    }
+    .bk-select {
+      background: none; border: none; outline: none;
+      font-family: var(--sans); font-size: 0.82rem;
+      color: var(--text); appearance: none;
+      cursor: pointer;
+    }
+    .bk-select option { background: var(--bg2); color: var(--text); }
+    .bk-btn {
+      background: var(--warm); color: var(--bg);
+      border: none; border-radius: 100px;
+      padding: 0.85rem 2rem;
+      font-family: var(--sans); font-size: 0.72rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s;
+      display: flex; align-items: center; gap: 0.6rem;
+      white-space: nowrap;
+    }
+    .bk-btn:hover { background: var(--warm-light); gap: 1rem; }
+    .bk-btn svg { width: 16px; height: 16px; }
+
+    /* ── HERO BOTTOM TEXT ── */
+    .hero-desc {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 2; width: min(700px, 90%);
+      text-align: center;
+      font-size: 0.78rem; line-height: 1.75;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 8rem 5vw; }
+    .eyebrow {
+      font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--olive-light); margin-bottom: 1.2rem; display: block;
+    }
+    .title-xl {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 700; line-height: 1.05;
+      color: var(--text); margin-bottom: 0.5rem;
+    }
+    .title-xl em { font-style: italic; font-weight: 400; color: var(--warm); }
+    .body-text {
+      font-size: 0.9rem; line-height: 1.9;
+      color: var(--text-dim); max-width: 500px;
+    }
+    .divider { width: 48px; height: 1px; background: var(--olive-dim); margin: 2rem 0; }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; padding: 1.2rem 0;
+    }
+    .marquee-track {
+      display: flex; gap: 5rem;
+      animation: marquee 25s linear infinite;
+      width: max-content;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: flex; align-items: center; gap: 1rem;
+      font-family: var(--serif); font-size: 1.1rem;
+      font-weight: 400; font-style: italic;
+      color: var(--text-dim); white-space: nowrap;
+    }
+    .marquee-item span { color: var(--olive); font-style: normal; font-size: 0.6rem; }
+
+    /* ── ABOUT ── */
+    .about { background: var(--bg2); }
+    .about-inner {
+      max-width: 1300px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.1fr 1fr;
+      gap: 8rem; align-items: center;
+    }
+    .about-img-stack { position: relative; }
+    .about-img-main {
+      width: 100%; aspect-ratio: 3/4; object-fit: cover;
+      filter: brightness(0.9);
+    }
+    .about-img-float {
+      position: absolute; bottom: -3rem; right: -3rem;
+      width: 52%; aspect-ratio: 1; object-fit: cover;
+      border: 5px solid var(--bg2);
+      filter: brightness(0.85);
+    }
+    .about-number-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2.5rem; margin-top: 3.5rem;
+    }
+    .about-num { border-left: 1px solid var(--olive-dim); padding-left: 1.2rem; }
+    .about-num-val {
+      font-family: var(--serif);
+      font-size: 2.8rem; font-weight: 700;
+      color: var(--warm); line-height: 1;
+    }
+    .about-num-label {
+      font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+      margin-top: 0.3rem;
+    }
+
+    /* ── SPA ── */
+    .spa { background: var(--bg); }
+    .spa-inner {
+      max-width: 1300px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1.1fr;
+      gap: 8rem; align-items: center;
+    }
+    .spa-img {
+      width: 100%; aspect-ratio: 2/3; object-fit: cover;
+      filter: brightness(0.85);
+    }
+    .spa-cards {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.2rem; margin-top: 3rem;
+    }
+    .spa-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .spa-card:hover {
+      border-color: var(--border-warm);
+      background: rgba(200,184,152,0.04);
+    }
+    .spa-icon { font-size: 1.4rem; margin-bottom: 0.8rem; }
+    .spa-card h4 {
+      font-family: var(--serif); font-size: 1rem;
+      font-weight: 500; color: var(--text); margin-bottom: 0.4rem;
+    }
+    .spa-card p { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* ── ROOMS ── */
+    .rooms { background: var(--bg2); }
+    .rooms-inner { max-width: 1300px; margin: 0 auto; }
+    .rooms-head {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 4rem;
+    }
+    .rooms-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px; }
+    .room-card { position: relative; overflow: hidden; }
+    .room-img {
+      width: 100%; aspect-ratio: 3/4; object-fit: cover;
+      transition: transform 0.7s ease, filter 0.5s;
+      filter: brightness(0.75);
+    }
+    .room-card:hover .room-img { transform: scale(1.05); filter: brightness(0.6); }
+    .room-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,9,7,0.9) 0%, transparent 60%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 2rem;
+      transition: background 0.4s;
+    }
+    .room-card:hover .room-overlay {
+      background: linear-gradient(to top, rgba(10,9,7,0.95) 0%, rgba(10,9,7,0.1) 60%);
+    }
+    .room-tag {
+      font-size: 0.58rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--olive-light);
+      margin-bottom: 0.5rem;
+    }
+    .room-name {
+      font-family: var(--serif); font-size: 1.6rem;
+      font-weight: 700; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .room-price {
+      font-family: var(--serif); font-size: 1.1rem;
+      color: var(--warm); margin-bottom: 1.2rem;
+    }
+    .room-price small { font-family: var(--sans); font-size: 0.7rem; color: var(--text-dim); }
+    .room-cta {
+      opacity: 0; transform: translateY(10px);
+      transition: all 0.4s;
+      font-size: 0.65rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--warm);
+      text-decoration: none;
+      border-bottom: 1px solid var(--olive-dim);
+      padding-bottom: 2px; display: inline-block;
+    }
+    .room-card:hover .room-cta { opacity: 1; transform: translateY(0); }
+
+    /* ── TERMAS FULL ── */
+    .termas-full {
+      position: relative; min-height: 90vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; padding: 8rem 5vw;
+    }
+    .termas-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, rgba(10,9,7,0.92) 40%, rgba(10,9,7,0.4) 100%),
+        url('https://termasdesaovicente.pt/wp-content/uploads/revslider/slider-2/piscina-1.jpg') center/cover;
+    }
+    .termas-inner {
+      position: relative; z-index: 2;
+      max-width: 1300px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .termas-features {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .termas-feat {
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .termas-feat-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--olive); flex-shrink: 0; margin-top: 0.3rem;
+    }
+    .termas-feat h5 {
+      font-family: var(--serif); font-size: 0.95rem;
+      color: var(--text); margin-bottom: 0.2rem;
+    }
+    .termas-feat p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+
+    /* ── EXPERIENCES GRID ── */
+    .exp { background: var(--bg); }
+    .exp-inner { max-width: 1300px; margin: 0 auto; }
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: 320px 320px;
+      gap: 1.5px; margin-top: 4rem;
+    }
+    .exp-item { position: relative; overflow: hidden; }
+    .exp-item:nth-child(1) { grid-column: span 5; grid-row: span 2; }
+    .exp-item:nth-child(2) { grid-column: span 4; }
+    .exp-item:nth-child(3) { grid-column: span 3; }
+    .exp-item:nth-child(4) { grid-column: span 3; }
+    .exp-item:nth-child(5) { grid-column: span 4; }
+    .exp-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.7s ease;
+      filter: brightness(0.7);
+    }
+    .exp-item:hover .exp-img { transform: scale(1.06); filter: brightness(0.55); }
+    .exp-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,9,7,0.85) 0%, transparent 55%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 1.8rem;
+    }
+    .exp-tag {
+      font-size: 0.58rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--olive-light);
+      margin-bottom: 0.4rem;
+    }
+    .exp-title {
+      font-family: var(--serif); font-size: 1.3rem;
+      font-weight: 500; color: var(--text);
+    }
+    .exp-item:nth-child(1) .exp-title { font-size: 2rem; }
+
+    /* ── GASTRONOMY ── */
+    .gastro { background: var(--bg2); }
+    .gastro-inner {
+      max-width: 1300px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8rem; align-items: center;
+    }
+    .gastro-imgs {
+      display: grid; grid-template-columns: 1fr 1fr;
+      grid-template-rows: 250px 250px; gap: 1.5px;
+    }
+    .gastro-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85); }
+    .gastro-img:first-child { grid-column: span 2; }
+    .gastro-hours { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0; }
+    .gastro-hour {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .gastro-hour:first-child { border-top: 1px solid var(--border); }
+    .gastro-hour-label {
+      font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--olive-light);
+    }
+    .gastro-hour-time { color: var(--text); }
+
+    /* ── REVIEWS ── */
+    .reviews { background: var(--bg); }
+    .reviews-inner { max-width: 1300px; margin: 0 auto; }
+    .reviews-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 4rem;
+    }
+    .review-score {
+      font-family: var(--serif); font-size: 5.5rem;
+      font-weight: 900; color: var(--warm); line-height: 1;
+    }
+    .review-score-sub {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+      margin-top: 0.3rem;
+    }
+    .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px; }
+    .review-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      transition: border-color 0.3s;
+    }
+    .review-card:hover { border-color: var(--border-warm); }
+    .review-stars { color: var(--olive); font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 1.2rem; }
+    .review-quote {
+      font-family: var(--serif); font-size: 1.05rem;
+      font-style: italic; color: var(--text);
+      line-height: 1.75; margin-bottom: 1.8rem;
+    }
+    .review-author {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--olive-light);
+    }
+    .review-date { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* ── LOCATION ── */
+    .location { background: var(--bg2); }
+    .location-inner {
+      max-width: 1300px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 6rem; align-items: start;
+    }
+    .location-items { display: flex; flex-direction: column; gap: 0; margin-top: 2.5rem; }
+    .loc-item {
+      display: flex; gap: 1.5rem; align-items: flex-start;
+      padding: 1.5rem 0; border-bottom: 1px solid var(--border);
+    }
+    .loc-item:first-child { border-top: 1px solid var(--border); }
+    .loc-icon {
+      width: 38px; height: 38px;
+      border: 1px solid var(--olive-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0; color: var(--olive-light);
+    }
+    .loc-item h4 {
+      font-family: var(--serif); font-size: 0.95rem;
+      color: var(--text); margin-bottom: 0.3rem;
+    }
+    .loc-item p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.65; }
+    .map-wrap { width: 100%; aspect-ratio: 4/3; position: relative; }
+    .map-wrap iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border: none; filter: grayscale(100%) invert(92%) hue-rotate(180deg) brightness(0.75) contrast(0.9);
+    }
+    .map-pin {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2; pointer-events: none;
+    }
+
+    /* ── GALLERY STRIP ── */
+    .gallery-strip { padding: 0; overflow: hidden; }
+    .gallery-strip-inner {
+      display: flex; height: 380px;
+    }
+    .gallery-strip-img {
+      flex: 1; object-fit: cover;
+      filter: brightness(0.7);
+      transition: flex 0.6s ease, filter 0.5s;
+    }
+    .gallery-strip-img:hover { flex: 2.5; filter: brightness(0.9); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080705; color: var(--text-dim);
+      padding: 5rem 5vw 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner { max-width: 1300px; margin: 0 auto; }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 4rem; padding-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .footer-brand-name {
+      font-family: var(--serif); font-size: 1.5rem;
+      font-weight: 700; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .footer-brand-sub {
+      font-family: var(--serif); font-style: italic;
+      font-size: 0.9rem; color: var(--olive-light); margin-bottom: 1.8rem;
+    }
+    .footer-social { display: flex; gap: 0.8rem; }
+    .footer-social a {
+      width: 34px; height: 34px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: var(--text-dim);
+      text-decoration: none; transition: all 0.2s;
+    }
+    .footer-social a:hover { border-color: var(--olive); color: var(--olive-light); }
+    .footer-col h5 {
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--warm);
+      margin-bottom: 1.5rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-col a {
+      font-size: 0.82rem; color: var(--text-dim);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex; justify-content: space-between;
+      align-items: center; padding-top: 2rem;
+      font-size: 0.7rem; color: var(--text-muted);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      nav { padding: 1.5rem 2rem; }
+      nav.scrolled { padding: 1rem 2rem; }
+      .nav-link { display: none; }
+      section { padding: 5rem 6vw; }
+      .about-inner, .spa-inner, .termas-inner,
+      .gastro-inner, .location-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .rooms-grid { grid-template-columns: 1fr 1fr; }
+      .exp-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .exp-item:nth-child(1) { grid-column: span 2; grid-row: auto; }
+      .exp-item:nth-child(n) { grid-column: span 1; }
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .hero-booking { flex-wrap: wrap; border-radius: 12px; padding: 1.5rem; }
+      .bk-field { border-right: none; border-bottom: 1px solid var(--border-warm); padding: 0.5rem 0 1rem; min-width: 100%; }
+      .bk-field:last-of-type { border-bottom: none; }
+    }
+    @media (max-width: 640px) {
+      section { padding: 4rem 5vw; }
+      .rooms-grid, .reviews-grid { grid-template-columns: 1fr; }
+      .gallery-strip-inner { height: 240px; }
+      .footer-top { grid-template-columns: 1fr; }
+      .rooms-head { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .hero-title { font-size: 3rem; }
+    }
+    /* ── CURSOR CUSTOM ── */
+    body { cursor: none; }
+    #cursor {
+      position: fixed; z-index: 9999; pointer-events: none;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--warm); mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, opacity 0.3s;
+    }
+    #cursor-ring {
+      position: fixed; z-index: 9998; pointer-events: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(200,184,152,0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s, border-color 0.3s;
+    }
+    body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; }
+    body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring {
+      width: 60px; height: 60px; border-color: rgba(200,184,152,0.8);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(50px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-60px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(60px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .reveal-scale {
+      opacity: 0; transform: scale(0.92);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+    /* stagger delays */
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+    .reveal-d5 { transition-delay: 0.5s; }
+    .reveal-d6 { transition-delay: 0.6s; }
+
+    /* ── PARALLAX IMAGES ── */
+    .parallax-wrap { overflow: hidden; }
+    .parallax-img { will-change: transform; }
+
+    /* ── PAGE LOADER ── */
+    #loader {
+      position: fixed; inset: 0; z-index: 10000;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2rem;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-logo {
+      font-family: var(--serif); font-size: 1.2rem;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--text); opacity: 0;
+      animation: loaderFade 0.6s 0.2s ease forwards;
+    }
+    @keyframes loaderFade { to { opacity: 1; } }
+    .loader-bar-wrap {
+      width: 200px; height: 1px; background: var(--border);
+      overflow: hidden;
+    }
+    .loader-bar {
+      height: 100%; width: 0; background: var(--warm);
+      animation: loaderBar 1.6s cubic-bezier(0.4,0,0.2,1) 0.3s forwards;
+    }
+    @keyframes loaderBar { to { width: 100%; } }
+    .loader-count {
+      font-family: var(--serif); font-size: 3rem; font-weight: 700;
+      color: var(--warm); position: absolute; bottom: 3rem; right: 4rem;
+    }
+
+    /* ── HERO TITLE SPLIT ── */
+    .hero-title .word {
+      display: inline-block; overflow: hidden;
+      vertical-align: bottom;
+    }
+    .hero-title .word-inner {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: wordReveal 1s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    .hero-title .word:nth-child(1) .word-inner { animation-delay: 1.8s; }
+    .hero-title .word:nth-child(2) .word-inner { animation-delay: 1.95s; }
+    .hero-title .word:nth-child(3) .word-inner { animation-delay: 2.1s; }
+    @keyframes wordReveal { to { transform: translateY(0); } }
+
+    .hero-title-sub {
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 2.4s forwards;
+    }
+    .hero-eyebrow {
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.6s forwards;
+    }
+    .hero-booking {
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 2.6s forwards;
+    }
+    .hero-desc {
+      opacity: 0;
+      animation: fadeUp 0.8s ease 2.8s forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── NUMBER COUNTER ── */
+    .count-val { display: inline-block; }
+
+    /* ── SMOOTH LINE DRAW ── */
+    .divider {
+      width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1) 0.3s;
+    }
+    .divider.visible { width: 48px; }
+
+    /* ── IMAGE REVEAL CLIP ── */
+    .img-reveal {
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 1.2s cubic-bezier(0.16,1,0.3,1);
+    }
+    .img-reveal.visible { clip-path: inset(0% 0 0 0); }
+    .img-reveal-d1 { transition-delay: 0.15s; }
+    .img-reveal-d2 { transition-delay: 0.3s; }
+
+    /* ── HOVER MAGNETIC BUTTONS ── */
+    .nav-book, .bk-btn { position: relative; overflow: hidden; }
+    .nav-book::after, .bk-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.12);
+      transform: translateX(-101%);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .nav-book:hover::after, .bk-btn:hover::after { transform: translateX(0); }
+
+    /* ── SPA CARD ANIMATE ── */
+    .spa-card {
+      transform: translateY(20px); opacity: 0;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1),
+                  opacity 0.7s ease,
+                  border-color 0.3s, background 0.3s;
+    }
+    .spa-card.visible { transform: translateY(0); opacity: 1; }
+
+    /* ── ROOM CARD ANIMATE ── */
+    .room-card {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.8s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.4s;
+    }
+    .room-card.visible { opacity: 1; transform: translateY(0); }
+    .room-card:hover { border-color: var(--border-warm); }
+    .room-card:hover .room-img {
+      transform: scale(1.08) !important;
+      filter: brightness(0.55) !important;
+    }
+    .room-card:hover .room-cta {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    /* ── REVIEW CARD ANIMATE ── */
+    .review-card { opacity: 0; transform: translateY(25px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.3s; }
+    .review-card.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── EXP ITEM ANIMATE ── */
+    .exp-item {
+      opacity: 0; transform: scale(0.92);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+    .exp-item.visible { opacity: 1; transform: scale(1); }
+    .exp-item:hover .exp-img {
+      transform: scale(1.08);
+      filter: brightness(0.65);
+    }
+
+    /* ── SECTION TITLE REVEAL ── */
+    .title-xl { opacity: 0; transform: translateY(30px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .title-xl.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── EYEBROW REVEAL ── */
+    .eyebrow { opacity: 0; transform: translateY(10px);
+      transition: opacity 0.7s ease, transform 0.7s ease; }
+    .eyebrow.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── BODY TEXT REVEAL ── */
+    .body-text { opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .body-text.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── SPA CARD STAGGER ── */
+    .spa-card { opacity: 0; transform: translateY(25px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .spa-card.visible { opacity: 1; transform: translateY(0); }
+    .spa-card:hover { transform: translateY(-8px); border-color: var(--warm); }
+
+    /* ── REVIEW CARD FLIP ── */
+    .review-card {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+    .review-card.visible { opacity: 1; transform: translateY(0); }
+    .review-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--warm);
+      box-shadow: 0 20px 40px rgba(200,184,152,0.1);
+    }
+
+    /* ── LOCATION ITEM ── */
+    .loc-item { opacity: 0; transform: translateX(-20px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .loc-item.visible { opacity: 1; transform: translateX(0); }
+
+    /* ── SMOOTH TRANSITION ON SCROLL ── */
+    section { transition: opacity 0.6s ease; }
+
+    /* ── MARQUEE PAUSE ON HOVER ── */
+    .marquee-track { cursor: default; }
+
+    /* ── SCROLL PROGRESS BAR ── */
+    #progress {
+      position: fixed; top: 0; left: 0; z-index: 9997;
+      height: 2px; width: 0; background: var(--warm);
+      transition: width 0.1s linear;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+      #loader { display: none; }
+      .reveal, .reveal-left, .reveal-right, .reveal-scale,
+      .img-reveal, .spa-card, .room-card, .review-card, .exp-item {
+        opacity: 1 !important; transform: none !important; clip-path: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">Palace Hotel & Spa</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-count" id="loader-count">0</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- SCROLL PROGRESS -->
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <button class="nav-menu" aria-label="Menu">
+    <div class="nav-menu-lines">
+      <span></span><span></span><span style="width:13px"></span>
+    </div>
+    Menu
+  </button>
+  <a href="#" class="nav-logo">Palace Hotel</a>
+  <div class="nav-right">
+    <a href="#sobre" class="nav-link">Sobre Nós</a>
+    <a href="#quartos" class="nav-link">Hotel</a>
+    <a href="#spa" class="nav-link">Termas & Spa</a>
+    <a href="#experiencias" class="nav-link">Pontos de Interesse</a>
+    <a href="#localizacao" class="nav-link">Contactos</a>
+    <a href="#reservas" class="nav-book">Reservar</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Termas de São Vicente · Pinheiro · Portugal</span>
+    <h1 class="hero-title">
+      <span class="word"><span class="word-inner">Palace</span></span>
+      <span class="word"><span class="word-inner">Hotel</span></span>
+      <span class="word"><span class="word-inner">& Spa</span></span>
+    </h1>
+    <p class="hero-title-sub">Termas de São Vicente</p>
+
+    <!-- BOOKING BAR -->
+    <div class="hero-booking" id="reservas">
+      <div class="bk-field">
+        <span class="bk-label">Check-in</span>
+        <input type="date" class="bk-select" value="2025-06-30">
+      </div>
+      <div class="bk-field">
+        <span class="bk-label">Check-out</span>
+        <input type="date" class="bk-select" value="2025-07-01">
+      </div>
+      <div class="bk-field">
+        <span class="bk-label">Quartos</span>
+        <select class="bk-select">
+          <option>1 Quarto</option>
+          <option>2 Quartos</option>
+          <option>3 Quartos</option>
+        </select>
+      </div>
+      <div class="bk-field">
+        <span class="bk-label">Hóspedes</span>
+        <select class="bk-select">
+          <option>2 Adultos</option>
+          <option>1 Adulto</option>
+          <option>2 Adultos, 1 Criança</option>
+          <option>4 Adultos</option>
+        </select>
+      </div>
+      <button class="bk-btn">
+        Let's Go
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="hero-desc">
+    Situado num palácio histórico rodeado de árvores centenárias, o Palace Hotel & Spa Termas de São Vicente é um refúgio de elegância e bem-estar no coração do norte de Portugal — onde a tradição termal encontra o conforto contemporâneo.
+  </p>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Termas Romanas <span>✦</span></div>
+    <div class="marquee-item">Hotel 4 Estrelas <span>✦</span></div>
+    <div class="marquee-item">Spa & Bem-Estar <span>✦</span></div>
+    <div class="marquee-item">Gastronomia Portuguesa <span>✦</span></div>
+    <div class="marquee-item">Natureza & Palácio <span>✦</span></div>
+    <div class="marquee-item">Águas Mineromedicinais <span>✦</span></div>
+    <div class="marquee-item">Norte de Portugal <span>✦</span></div>
+    <div class="marquee-item">Termas Romanas <span>✦</span></div>
+    <div class="marquee-item">Hotel 4 Estrelas <span>✦</span></div>
+    <div class="marquee-item">Spa & Bem-Estar <span>✦</span></div>
+    <div class="marquee-item">Gastronomia Portuguesa <span>✦</span></div>
+    <div class="marquee-item">Natureza & Palácio <span>✦</span></div>
+    <div class="marquee-item">Águas Mineromedicinais <span>✦</span></div>
+    <div class="marquee-item">Norte de Portugal <span>✦</span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="sobre">
+  <div class="about-inner">
+    <div class="about-img-stack">
+      <img class="about-img-main img-reveal parallax-img"
+        src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/10210-1-1.jpg"
+        alt="Palace Hotel exterior" loading="lazy">
+      <img class="about-img-float img-reveal img-reveal-d1"
+        src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/PHOTO-2021-03-27-19-15-03-2.jpg"
+        alt="Detalhe hotel" loading="lazy">
+    </div>
+    <div>
+      <span class="eyebrow reveal">A Nossa História</span>
+      <h2 class="title-xl reveal reveal-d1">Um Palácio<br><em>entre Séculos</em></h2>
+      <div class="divider reveal reveal-d2"></div>
+      <p class="body-text reveal reveal-d2">
+        Situado num palácio histórico rodeado de árvores amplas, o Palace Hotel & Spa encontra-se inserido num parque termal de inspiração romana. A apenas 6 km do Castro de Monte Mozinho, um sítio arqueológico do período neolítico, e facilmente acessível pela estrada nacional N106 em Pinheiro.
+      </p>
+      <p class="body-text" style="margin-top:1rem">
+        As águas bicarbonatadas sódicas das Termas de São Vicente são reconhecidas pelas suas propriedades terapêuticas desde o século XIX, atraindo visitantes em busca de saúde e descanso genuíno.
+      </p>
+      <div class="about-number-row reveal reveal-d3">
+        <div class="about-num">
+          <div class="about-num-val">4★</div>
+          <div class="about-num-label">Hotel Oficial</div>
+        </div>
+        <div class="about-num">
+          <div class="about-num-val"><span class="count-val" data-target="978">0</span></div>
+          <div class="about-num-label">Avaliações Google</div>
+        </div>
+        <div class="about-num">
+          <div class="about-num-val">115€</div>
+          <div class="about-num-label">A partir de / noite</div>
+        </div>
+        <div class="about-num">
+          <div class="about-num-val">XIX</div>
+          <div class="about-num-label">Século de Fundação</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPA -->
+<section class="spa" id="spa">
+  <div class="spa-inner">
+    <div>
+      <span class="eyebrow reveal">Spa & Termas</span>
+      <h2 class="title-xl reveal reveal-d1">Inspiração<br><em>Romana</em></h2>
+      <div class="divider reveal reveal-d2"></div>
+      <p class="body-text">
+        O nosso spa de inspiração romana foi concebido para proporcionar uma experiência de bem-estar total. As águas termais de São Vicente, com propriedades terapêuticas únicas, são o coração de cada tratamento.
+      </p>
+      <div class="spa-cards">
+        <div class="spa-card">
+          <div class="spa-icon">♨</div>
+          <h4>Termas Romanas</h4>
+          <p>Piscina termal com águas mineromedicinais aquecidas naturalmente</p>
+        </div>
+        <div class="spa-card">
+          <div class="spa-icon">◈</div>
+          <h4>Massagens</h4>
+          <p>Tratamentos personalizados com técnicas clássicas e orientais</p>
+        </div>
+        <div class="spa-card">
+          <div class="spa-icon">❋</div>
+          <h4>Tratamentos Faciais</h4>
+          <p>Rituais de beleza com produtos naturais da região douro</p>
+        </div>
+        <div class="spa-card">
+          <div class="spa-icon">◎</div>
+          <h4>Hidroterapia</h4>
+          <p>Circuito de águas com banhos de contraste e jacuzzi exterior</p>
+        </div>
+      </div>
+    </div>
+    <img class="spa-img img-reveal parallax-img"
+      src="https://termasdesaovicente.pt/wp-content/uploads/revslider/slider-2/piscina-1.jpg"
+      alt="Piscina termal" loading="lazy">
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section class="rooms" id="quartos">
+  <div class="rooms-inner">
+    <div class="rooms-head">
+      <div>
+        <span class="eyebrow reveal">Acomodação de Luxo</span>
+        <h2 class="title-xl reveal reveal-d1">Quartos &<br><em>Suites</em></h2>
+      </div>
+      <p class="body-text reveal reveal-d2" style="max-width: 400px;">Escolha entre as nossas acomodações elegantes na Ala Charme ou na histórica Ala do Palácio</p>
+    </div>
+
+    <!-- ALA CHARME -->
+    <div style="margin-top: 4rem;">
+      <h3 class="title-xl reveal" style="font-size: 1.8rem; margin-bottom: 2rem;">Ala <em>Charme</em></h3>
+      <div class="rooms-grid">
+        <div class="room-card reveal reveal-d1">
+          <img class="room-img"
+            src="./quarto-casal.jpg"
+            alt="Quarto de Casal Ala Charme" loading="lazy">
+          <div class="room-overlay">
+            <span class="room-tag">Ala Charme</span>
+            <div class="room-name">Quarto de Casal</div>
+            <p style="color: rgba(240,236,228,0.6); font-size: 0.8rem; margin: 0.5rem 0; line-height: 1.5;">Aconchego e elegância para casais · Varanda privativa</p>
+            <div class="room-price">93€ <small>/ noite</small></div>
+            <a href="#reservas" class="room-cta">Reservar →</a>
+          </div>
+        </div>
+        <div class="room-card reveal reveal-d2">
+          <img class="room-img"
+            src="./quarto-twin-charme.jpg"
+            alt="Quarto Twin Ala Charme" loading="lazy">
+          <div class="room-overlay">
+            <span class="room-tag">Ala Charme</span>
+            <div class="room-name">Quarto Twin</div>
+            <p style="color: rgba(240,236,228,0.6); font-size: 0.8rem; margin: 0.5rem 0; line-height: 1.5;">Duas camas · Design moderno · Acesso spa</p>
+            <div class="room-price">97€ <small>/ noite</small></div>
+            <a href="#reservas" class="room-cta">Reservar →</a>
+          </div>
+        </div>
+        <div class="room-card reveal reveal-d3">
+          <img class="room-img"
+            src="./suite-charme.jpg"
+            alt="Suite Charme Premium" loading="lazy">
+          <div class="room-overlay">
+            <span class="room-tag">Premium</span>
+            <div class="room-name">Suite Charme</div>
+            <p style="color: rgba(240,236,228,0.6); font-size: 0.8rem; margin: 0.5rem 0; line-height: 1.5;">Sala de estar · Banheira de hidromassagem · Vista jardim</p>
+            <div class="room-price">115€ <small>/ noite</small></div>
+            <a href="#reservas" class="room-cta">Reservar →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALA HISTÓRICA -->
+    <div style="margin-top: 4rem;">
+      <h3 class="title-xl reveal" style="font-size: 1.8rem; margin-bottom: 2rem;">Ala <em>Histórica</em></h3>
+      <div class="rooms-grid">
+        <div class="room-card reveal reveal-d1">
+          <img class="room-img"
+            src="./quarto-casal.jpg"
+            alt="Quarto Duplo Ala Histórica" loading="lazy">
+          <div class="room-overlay">
+            <span class="room-tag">Ala Histórica</span>
+            <div class="room-name">Quarto Duplo</div>
+            <p style="color: rgba(240,236,228,0.6); font-size: 0.8rem; margin: 0.5rem 0; line-height: 1.5;">Carácter histórico · Pé direito alto · Detalhe tradicional</p>
+            <div class="room-price">87€ <small>/ noite</small></div>
+            <a href="#reservas" class="room-cta">Reservar →</a>
+          </div>
+        </div>
+        <div class="room-card reveal reveal-d2">
+          <img class="room-img"
+            src="./quarto-twin-charme.jpg"
+            alt="Quarto Single Ala Histórica" loading="lazy">
+          <div class="room-overlay">
+            <span class="room-tag">Ala Histórica</span>
+            <div class="room-name">Quarto Single</div>
+            <p style="color: rgba(240,236,228,0.6); font-size: 0.8rem; margin: 0.5rem 0; line-height: 1.5;">Ideal para viajantes · Cama de solteiro premium · Wi-Fi</p>
+            <div class="room-price">72€ <small>/ noite</small></div>
+            <a href="#reservas" class="room-cta">Reservar →</a>
+          </div>
+        </div>
+        <div class="room-card reveal reveal-d3">
+          <img class="room-img"
+            src="./suite-charme.jpg"
+            alt="Suite Histórica" loading="lazy">
+          <div class="room-overlay">
+            <span class="room-tag">Premium Histórico</span>
+            <div class="room-name">Suite Histórica</div>
+            <p style="color: rgba(240,236,228,0.6); font-size: 0.8rem; margin: 0.5rem 0; line-height: 1.5;">Luxo clássico · 2 ambientes · Vista panorâmica</p>
+            <div class="room-price">125€ <small>/ noite</small></div>
+            <a href="#reservas" class="room-cta">Reservar →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMENITIES ROW -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border);">
+      <div class="reveal reveal-d1">
+        <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📶</div>
+        <div style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--olive-light);">Wi-Fi Gratuito</div>
+      </div>
+      <div class="reveal reveal-d2">
+        <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">❄️</div>
+        <div style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--olive-light);">Ar Condicionado</div>
+      </div>
+      <div class="reveal reveal-d3">
+        <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🛁</div>
+        <div style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--olive-light);">Banheira Premium</div>
+      </div>
+      <div class="reveal reveal-d4">
+        <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📺</div>
+        <div style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--olive-light);">Smart TV</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TERMAS FULL -->
+<div class="termas-full">
+  <div class="termas-bg"></div>
+  <div class="termas-inner">
+    <div>
+      <span class="eyebrow">Águas Mineromedicinais</span>
+      <h2 class="title-xl">As Termas de<br><em>São Vicente</em></h2>
+      <div class="divider"></div>
+      <p class="body-text">
+        As termas de São Vicente são reconhecidas desde o século XIX pelas suas propriedades terapêuticas. As águas bicarbonatadas sódicas são especialmente indicadas para o tratamento de afecções digestivas, hepáticas e metabólicas.
+      </p>
+      <div class="termas-features">
+        <div class="termas-feat">
+          <div class="termas-feat-dot"></div>
+          <div><h5>Piscina Termal</h5><p>Aquecida naturalmente pelas fontes</p></div>
+        </div>
+        <div class="termas-feat">
+          <div class="termas-feat-dot"></div>
+          <div><h5>Balneário Clássico</h5><p>Tratamentos medicinais tradicionais</p></div>
+        </div>
+        <div class="termas-feat">
+          <div class="termas-feat-dot"></div>
+          <div><h5>Circuito de Águas</h5><p>Banhos de contraste e hidromassagem</p></div>
+        </div>
+        <div class="termas-feat">
+          <div class="termas-feat-dot"></div>
+          <div><h5>Jacuzzi Exterior</h5><p>No coração do parque arborizado</p></div>
+        </div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</div>
+
+<!-- EXPERIENCES -->
+<section class="exp" id="experiencias">
+  <div class="exp-inner">
+    <span class="eyebrow">Mais que um Hotel</span>
+    <h2 class="title-xl">Experiências<br><em>Inesquecíveis</em></h2>
+    <div class="exp-grid">
+      <div class="exp-item">
+        <img class="exp-img"
+          src="./suite-charme.jpg"
+          alt="Parque e natureza" loading="lazy">
+        <div class="exp-overlay">
+          <span class="exp-tag">Natureza</span>
+          <div class="exp-title">Parque Arborizado</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <img class="exp-img"
+          src="https://termasdesaovicente.pt/wp-content/uploads/revslider/slider-2/piscina-1.jpg"
+          alt="Piscina termal" loading="lazy">
+        <div class="exp-overlay">
+          <span class="exp-tag">Lazer</span>
+          <div class="exp-title">Piscina Exterior</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <img class="exp-img"
+          src="./quarto-duplo-charme.jpg"
+          alt="Palace Hotel exterior" loading="lazy">
+        <div class="exp-overlay">
+          <span class="exp-tag">Região · 6 km</span>
+          <div class="exp-title">Monte Mozinho</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <img class="exp-img"
+          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=700&q=85"
+          alt="Eventos" loading="lazy">
+        <div class="exp-overlay">
+          <span class="exp-tag">Eventos</span>
+          <div class="exp-title">Celebrações</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <img class="exp-img"
+          src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/spa-1.fw_.png"
+          alt="Spa massagens" loading="lazy">
+        <div class="exp-overlay">
+          <span class="exp-tag">Bem-estar</span>
+          <div class="exp-title">Massagens & Rituais</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GASTRONOMY -->
+<section class="gastro" id="gastronomia">
+  <div class="gastro-inner">
+    <div>
+      <span class="eyebrow">Restaurante O Conforto</span>
+      <h2 class="title-xl">Sabores do<br><em>Norte</em></h2>
+      <div class="divider"></div>
+      <p class="body-text">
+        O nosso restaurante celebra os sabores autênticos da gastronomia portuguesa, com ingredientes locais e sazonais. Do pequeno-almoço ao jantar, cada refeição é uma experiência memorável no coração do hotel.
+      </p>
+      <div class="gastro-hours">
+        <div class="gastro-hour">
+          <span class="gastro-hour-label">Pequeno-almoço</span>
+          <span class="gastro-hour-time">07:30 – 10:30</span>
+        </div>
+        <div class="gastro-hour">
+          <span class="gastro-hour-label">Almoço</span>
+          <span class="gastro-hour-time">12:30 – 15:00</span>
+        </div>
+        <div class="gastro-hour">
+          <span class="gastro-hour-label">Jantar</span>
+          <span class="gastro-hour-time">19:30 – 22:30</span>
+        </div>
+        <div class="gastro-hour">
+          <span class="gastro-hour-label">Bar</span>
+          <span class="gastro-hour-time">10:00 – 00:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="gastro-imgs">
+      <img class="gastro-img"
+        src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/restaurante-.fw_.png"
+        alt="Restaurante O Conforto" loading="lazy">
+      <img class="gastro-img"
+        src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/10210-1.jpg"
+        alt="Palace Hotel" loading="lazy">
+      <img class="gastro-img"
+        src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/eventos.fw_.png"
+        alt="Eventos" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews">
+  <div class="reviews-inner">
+    <div class="reviews-top">
+      <div>
+        <span class="eyebrow">Opinião dos Hóspedes</span>
+        <h2 class="title-xl">O que dizem<br><em>de nós</em></h2>
+      </div>
+      <div style="text-align:right">
+        <div class="review-score">3,4</div>
+        <div style="color:var(--olive);letter-spacing:3px;font-size:1rem">★★★☆☆</div>
+        <div class="review-score-sub">978 avaliações no Google</div>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote">"As termas são absolutamente maravilhosas. O ambiente do palácio é único e a equipa foi sempre muito atenciosa. Voltarei com certeza."</p>
+        <div class="review-author">Maria S.</div>
+        <div class="review-date">Há 2 meses · Google</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-quote">"Localização fantástica, rodeado de natureza. O spa é muito agradável e as águas termais fazem bem à alma. O pequeno-almoço é excelente."</p>
+        <div class="review-author">João P.</div>
+        <div class="review-date">Há 1 mês · Google</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote">"Um retiro perfeito para descansar do agito da cidade. O parque é lindo, o quarto estava impecável e as termas romanas são únicas em Portugal."</p>
+        <div class="review-author">Ana L.</div>
+        <div class="review-date">Há 3 semanas · Google</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+<div class="gallery-strip">
+  <div class="gallery-strip-inner">
+    <img class="gallery-strip-img"
+      src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/10210-1.jpg"
+      alt="Hotel exterior" loading="lazy">
+    <img class="gallery-strip-img"
+      src="https://termasdesaovicente.pt/wp-content/uploads/revslider/slider-2/piscina-1.jpg"
+      alt="Piscina termal" loading="lazy">
+    <img class="gallery-strip-img"
+      src="https://termasdesaovicente.pt/wp-content/uploads/2022/11/romantico-05.png"
+      alt="Quarto romântico" loading="lazy">
+    <img class="gallery-strip-img"
+      src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/10210-1-1.jpg"
+      alt="Exterior hotel" loading="lazy">
+    <img class="gallery-strip-img"
+      src="https://termasdesaovicente.pt/wp-content/uploads/2019/12/restaurante-.fw_.png"
+      alt="Restaurante O Conforto" loading="lazy">
+  </div>
+</div>
+
+<!-- LOCATION -->
+<section class="location" id="localizacao">
+  <div class="location-inner">
+    <div>
+      <span class="eyebrow">Como Chegar</span>
+      <h2 class="title-xl">Pinheiro,<br><em>Portugal</em></h2>
+      <div class="divider"></div>
+      <div class="location-items">
+        <div class="loc-item">
+          <div class="loc-icon">◎</div>
+          <div>
+            <h4>Morada</h4>
+            <p>Alameda D. Rosa Branca Archer 51<br>Pinheiro, Portugal</p>
+          </div>
+        </div>
+        <div class="loc-item">
+          <div class="loc-icon">☏</div>
+          <div>
+            <h4>Contacto</h4>
+            <p>+351 255 617 080/081<br>geral@termasdesaovicente.pt</p>
+          </div>
+        </div>
+        <div class="loc-item">
+          <div class="loc-icon">◷</div>
+          <div>
+            <h4>Check-in / Check-out</h4>
+            <p>Check-in: 15:00 · Check-out: 12:00<br>Recepção aberta 24 horas</p>
+          </div>
+        </div>
+        <div class="loc-item">
+          <div class="loc-icon">⊕</div>
+          <div>
+            <h4>Arredores</h4>
+            <p>Castro de Monte Mozinho · 6 km<br>Centro de Penafiel · 12 km<br>Aeroporto do Porto · 45 km</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d994.4!2d-8.2945949!3d41.1174022!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd249ac420314325%3A0xb06e2659903be615!2sPalace%20Hotel%20%26%20Spa%20Termas%20de%20S%C3%A3o%20Vicente!5e0!3m2!1spt!2spt!4v1749317000000"
+        allowfullscreen loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Localização Palace Hotel Termas de São Vicente">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">Palace Hotel & Spa</div>
+        <div class="footer-brand-sub">Termas de São Vicente</div>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="TripAdvisor">ta</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Hotel</h5>
+        <ul>
+          <li><a href="#quartos">Quartos & Suites</a></li>
+          <li><a href="#spa">Spa & Termas</a></li>
+          <li><a href="#gastronomia">Restaurante</a></li>
+          <li><a href="#experiencias">Experiências</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Reservas</h5>
+        <ul>
+          <li><a href="#reservas">Reservar Online</a></li>
+          <li><a href="tel:+351255617080">255 617 080</a></li>
+          <li><a href="#">Grupos & Eventos</a></li>
+          <li><a href="#">Ofertas Especiais</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Informação</h5>
+        <ul>
+          <li><a href="#localizacao">Como Chegar</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Termos & Condições</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Palace Hotel & Spa Termas de São Vicente. Todos os direitos reservados.</span>
+      <a href="#" style="color:var(--text-muted);text-decoration:none">Política de Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── LOADER ── */
+  const loader = document.getElementById('loader');
+  const loaderCount = document.getElementById('loader-count');
+  let count = 0;
+  const countInterval = setInterval(() => {
+    count = Math.min(count + Math.ceil(Math.random() * 15), 100);
+    loaderCount.textContent = count;
+    if (count >= 100) {
+      clearInterval(countInterval);
+      setTimeout(() => { loader.classList.add('hidden'); }, 300);
+    }
+  }, 40);
+
+  /* ── CURSOR ── */
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  /* ── NAV SCROLL ── */
+  const nav = document.getElementById('navbar');
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    progress.style.width = pct + '%';
+  }, { passive: true });
+
+  /* ── SCROLL REVEAL ── */
+  const revealEls = document.querySelectorAll(
+    '.reveal, .reveal-left, .reveal-right, .reveal-scale, .img-reveal, .divider, .spa-card, .room-card, .review-card, .exp-item, .title-xl, .eyebrow, .body-text, .loc-item'
+  );
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // Trigger parallax on visible elements
+        if (e.target.classList.contains('parallax-img')) {
+          onParallax();
+        }
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -80px 0px' });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ── STAGGER CHILDREN (spa cards, room cards, etc.) ── */
+  document.querySelectorAll('.spa-cards').forEach(parent => {
+    parent.querySelectorAll('.spa-card').forEach((card, i) => {
+      card.style.transitionDelay = (i * 0.1) + 's';
+    });
+  });
+  document.querySelectorAll('.rooms-grid').forEach(parent => {
+    parent.querySelectorAll('.room-card').forEach((card, i) => {
+      card.style.transitionDelay = (i * 0.12) + 's';
+    });
+  });
+  document.querySelectorAll('.reviews-grid').forEach(parent => {
+    parent.querySelectorAll('.review-card').forEach((card, i) => {
+      card.style.transitionDelay = (i * 0.1) + 's';
+    });
+  });
+  document.querySelectorAll('.exp-grid').forEach(parent => {
+    parent.querySelectorAll('.exp-item').forEach((item, i) => {
+      item.style.transitionDelay = (i * 0.08) + 's';
+    });
+  });
+
+  /* ── NUMBER COUNTER ── */
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.target;
+      const duration = 1800;
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.floor(eased * target);
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(step);
+      counterObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.count-val').forEach(el => counterObs.observe(el));
+
+  /* ── PARALLAX ── */
+  const parallaxImgs = document.querySelectorAll('.parallax-img');
+  function onParallax() {
+    parallaxImgs.forEach(img => {
+      const rect = img.closest('.parallax-wrap, .about-img-stack, .spa-inner') || img.parentElement;
+      const bounds = img.getBoundingClientRect();
+      const center = bounds.top + bounds.height / 2;
+      const offset = (window.innerHeight / 2 - center) * 0.12;
+      img.style.transform = `translateY(${offset}px) scale(1.08)`;
+    });
+  }
+  window.addEventListener('scroll', onParallax, { passive: true });
+  onParallax();
+
+  /* ── HERO BG PARALLAX ── */
+  const heroBg = document.querySelector('.hero-bg');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight) {
+      heroBg.style.transform = `translateY(${window.scrollY * 0.3}px) scale(1.05)`;
+    }
+  }, { passive: true });
+
+  /* ── BUTTON MAGNETIC HOVER ── */
+  document.querySelectorAll('.nav-book, .bk-btn, .room-cta').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const distance = Math.sqrt(x * x + y * y);
+      if (distance < 100) {
+        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+      }
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0, 0)';
+    });
+  });
+
+  /* ── IMAGE SCALE ON SCROLL ── */
+  window.addEventListener('scroll', () => {
+    document.querySelectorAll('.parallax-img').forEach(img => {
+      const rect = img.getBoundingClientRect();
+      const visible = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / window.innerHeight));
+      img.style.transform = `scale(${1 + visible * 0.1})`;
+    });
+  }, { passive: true });
+
+  /* ── SMOOTH SCROLL LINKS ── */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      const href = anchor.getAttribute('href');
+      if (href !== '#' && document.querySelector(href)) {
+        e.preventDefault();
+        document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
