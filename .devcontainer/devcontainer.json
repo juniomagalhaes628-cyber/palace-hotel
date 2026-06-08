@@ -1,0 +1,43 @@
+{
+  "name": "Palace Hotel Dev",
+  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:18": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ritwickdey.LiveServer",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.code-runner",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.wordWrap": "on",
+        "[html]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      }
+    }
+  },
+  "forwardPorts": [3090, 5500],
+  "portsAttributes": {
+    "3090": {
+      "label": "Palace Hotel",
+      "onAutoForward": "notify"
+    },
+    "5500": {
+      "label": "Live Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm install -g http-server && echo 'Codespace ready! Run: npx http-server -p 3090'",
+  "remoteUser": "codespace"
+}

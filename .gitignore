@@ -1,0 +1,25 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# System
+Thumbs.db
+.env.local
+
+# Build
+dist/
+build/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db

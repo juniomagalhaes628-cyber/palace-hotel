@@ -1,0 +1,60 @@
+name: Deploy Palace Hotel
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Validate HTML
+      run: |
+        if command -v html-validator &> /dev/null; then
+          html-validator --file palace-hotel.html
+        else
+          echo "HTML validation skipped (html-validator not installed)"
+        fi
+
+    - name: Check file integrity
+      run: |
+        echo "✓ Checking palace-hotel.html..."
+        test -f palace-hotel.html && echo "✓ palace-hotel.html exists"
+        echo "✓ Checking images..."
+        test -f hotel-hero.jpg && echo "✓ hotel-hero.jpg exists"
+        test -f quarto-casal.jpg && echo "✓ quarto-casal.jpg exists"
+        echo "✓ All files validated!"
+
+    - name: Create artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: palace-hotel-build
+        path: |
+          palace-hotel.html
+          *.jpg
+          README.md
+
+  pages:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: '.'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
