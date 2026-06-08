@@ -1,45 +1,23 @@
 {
-  "name": "Palace Hotel Dev",
-  "image": "node:20-bullseye",
+  "name": "Palace Hotel",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20-bullseye",
   "customizations": {
     "vscode": {
       "extensions": [
         "ritwickdey.LiveServer",
         "esbenp.prettier-vscode",
-        "bradlc.vscode-tailwindcss",
-        "formulahendry.code-runner",
-        "eamodio.gitlens",
-        "GitHub.copilot"
-      ],
-      "settings": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true,
-        "editor.wordWrap": "on",
-        "liveServer.settings.port": 5500,
-        "[html]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[json]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[javascript]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        }
-      }
+        "eamodio.gitlens"
+      ]
     }
   },
   "forwardPorts": [3090, 5500],
   "portsAttributes": {
     "3090": {
-      "label": "Palace Hotel",
-      "onAutoForward": "notify",
-      "visibility": "public"
+      "label": "Palace Hotel Website",
+      "onAutoForward": "notify"
     },
     "5500": {
-      "label": "Live Server",
-      "onAutoForward": "notify"
+      "label": "Live Server"
     }
-  },
-  "postCreateCommand": "apt-get update && apt-get install -y git curl && npm install -g http-server live-server && npm --version && node --version && echo '✓ Codespace ready!'",
-  "remoteUser": "root"
+  }
 }
