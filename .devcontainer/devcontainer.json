@@ -1,12 +1,6 @@
 {
   "name": "Palace Hotel Dev",
-  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:20": {
-      "version": "20"
-    }
-  },
+  "image": "node:20-bullseye",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -14,7 +8,8 @@
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "formulahendry.code-runner",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "GitHub.copilot"
       ],
       "settings": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -25,6 +20,9 @@
           "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[javascript]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
         }
       }
@@ -42,6 +40,6 @@
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "npm install -g http-server live-server && echo '✓ Codespace ready! Use Live Server or run: npx http-server -p 3090'",
-  "remoteUser": "codespace"
+  "postCreateCommand": "apt-get update && apt-get install -y git curl && npm install -g http-server live-server && npm --version && node --version && echo '✓ Codespace ready!'",
+  "remoteUser": "root"
 }
