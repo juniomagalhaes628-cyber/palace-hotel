@@ -3,7 +3,9 @@
   "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:18": {}
+    "ghcr.io/devcontainers/features/node:20": {
+      "version": "20"
+    }
   },
   "customizations": {
     "vscode": {
@@ -18,6 +20,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
         "editor.wordWrap": "on",
+        "liveServer.settings.port": 5500,
         "[html]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
@@ -31,13 +34,14 @@
   "portsAttributes": {
     "3090": {
       "label": "Palace Hotel",
-      "onAutoForward": "notify"
+      "onAutoForward": "notify",
+      "visibility": "public"
     },
     "5500": {
       "label": "Live Server",
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "npm install -g http-server && echo 'Codespace ready! Run: npx http-server -p 3090'",
+  "postCreateCommand": "npm install -g http-server live-server && echo '✓ Codespace ready! Use Live Server or run: npx http-server -p 3090'",
   "remoteUser": "codespace"
 }
