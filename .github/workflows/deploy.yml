@@ -1,4 +1,4 @@
-name: Deploy Palace Hotel
+name: Deploy GP Motors
 
 on:
   push:
@@ -16,27 +16,23 @@ jobs:
     - name: Validate HTML
       run: |
         if command -v html-validator &> /dev/null; then
-          html-validator --file palace-hotel.html
+          html-validator --file index.html
         else
           echo "HTML validation skipped (html-validator not installed)"
         fi
 
     - name: Check file integrity
       run: |
-        echo "✓ Checking palace-hotel.html..."
-        test -f palace-hotel.html && echo "✓ palace-hotel.html exists"
-        echo "✓ Checking images..."
-        test -f hotel-hero.jpg && echo "✓ hotel-hero.jpg exists"
-        test -f quarto-casal.jpg && echo "✓ quarto-casal.jpg exists"
+        echo "✓ Checking index.html..."
+        test -f index.html && echo "✓ index.html exists"
         echo "✓ All files validated!"
 
     - name: Create artifact
       uses: actions/upload-artifact@v3
       with:
-        name: palace-hotel-build
+        name: gpmotors-build
         path: |
-          palace-hotel.html
-          *.jpg
+          index.html
           README.md
 
   pages:

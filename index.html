@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GP Motors – Comércio de Motas, Peças e Acessórios | Penafiel</title>
+<meta name="description" content="Concessionário oficial TGB, Macbor e Cyclone em Penafiel. Motas novas e usadas, peças, acessórios e oficina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#090909;
+  --bg2:#0f0f0f;
+  --bg3:#161616;
+  --bg4:#1e1e1e;
+  --orange:#FF5500;
+  --orange2:#FF7733;
+  --orange-dim:#C24000;
+  --red:#E6001E;
+  --text:#FFFFFF;
+  --text-dim:rgba(255,255,255,0.55);
+  --text-muted:rgba(255,255,255,0.3);
+  --border:rgba(255,255,255,0.07);
+  --border-orange:rgba(255,85,0,0.3);
+  --sans:'Barlow',system-ui,sans-serif;
+  --cond:'Barlow Condensed',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;cursor:none}
+::selection{background:var(--orange);color:#000}
+
+/* CURSOR */
+#cursor-dot{position:fixed;width:8px;height:8px;background:var(--orange);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s;mix-blend-mode:normal}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--orange);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .08s,width .2s,height .2s,border-color .2s;opacity:.7}
+body:hover #cursor-ring{opacity:1}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:#000;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+#loader-logo{font-family:var(--cond);font-size:56px;font-weight:900;letter-spacing:0.05em;color:var(--text);opacity:0;animation:fadeInUp .6s .2s forwards}
+#loader-logo span{color:var(--orange)}
+#loader-bar-wrap{width:320px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;opacity:0;animation:fadeInUp .6s .4s forwards}
+#loader-bar{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange2));width:0%;transition:width .05s linear}
+#loader-num{font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.2em;color:var(--text-dim);opacity:0;animation:fadeInUp .6s .5s forwards}
+
+/* SCROLL PROGRESS */
+#progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--orange2));z-index:999;width:0%;transition:width .1s linear}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;transition:background .3s,border-bottom .3s,backdrop-filter .3s}
+nav.scrolled{background:rgba(9,9,9,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--cond);font-size:28px;font-weight:900;letter-spacing:.05em;color:var(--text);text-decoration:none;flex-shrink:0}
+.nav-logo span{color:var(--orange)}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--orange);transition:width .25s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-phone{font-size:13px;font-weight:600;color:var(--text-dim);letter-spacing:.05em;text-decoration:none;transition:color .2s}
+.nav-phone:hover{color:var(--orange)}
+.btn-nav{padding:10px 22px;background:var(--orange);color:#000;font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:none;border-radius:2px;text-decoration:none;transition:background .2s,transform .15s}
+.btn-nav:hover{background:var(--orange2);transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:none;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all .3s}
+
+/* MOBILE NAV DRAWER */
+#nav-drawer{position:fixed;inset:0;background:rgba(9,9,9,0.98);backdrop-filter:blur(30px);z-index:490;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transform:translateY(-100%);transition:transform .4s cubic-bezier(.77,0,.175,1)}
+#nav-drawer.open{transform:translateY(0)}
+#nav-drawer a{font-family:var(--cond);font-size:42px;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:.05em;transition:color .2s}
+#nav-drawer a:hover{color:var(--orange)}
+
+/* HERO */
+#hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,85,0,0.08) 0%,rgba(0,0,0,0.7) 60%,rgba(0,0,0,0.95) 100%)}
+.hero-content{position:relative;z-index:10;text-align:center;max-width:900px;padding:0 24px}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;opacity:0;animation:fadeInUp .6s 1.2s forwards}
+.hero-title{font-family:var(--cond);font-size:clamp(56px,9vw,120px);font-weight:900;line-height:.92;text-transform:uppercase;margin-bottom:24px;overflow:hidden}
+.hero-title .word{display:inline-block;overflow:hidden;margin-right:.18em}
+.hero-title .word-inner{display:block;transform:translateY(110%);animation:wordReveal .7s cubic-bezier(.16,1,.3,1) forwards}
+.hero-title .word:nth-child(1) .word-inner{animation-delay:1.3s}
+.hero-title .word:nth-child(2) .word-inner{animation-delay:1.45s}
+.hero-title .word:nth-child(3) .word-inner{animation-delay:1.6s}
+.hero-title .word:nth-child(4) .word-inner{animation-delay:1.75s}
+.hero-title .word:nth-child(5) .word-inner{animation-delay:1.9s}
+.hero-title .word:nth-child(6) .word-inner{animation-delay:2.05s}
+.hero-title .accent{background:linear-gradient(135deg,var(--orange),var(--orange2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;font-weight:500;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:40px;opacity:0;animation:fadeInUp .6s 2.2s forwards}
+.hero-ctas{display:flex;gap:16px;justify-content:center;opacity:0;animation:fadeInUp .6s 2.4s forwards}
+.btn-primary{padding:16px 36px;background:var(--orange);color:#000;font-family:var(--cond);font-size:15px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:none;border-radius:2px;text-decoration:none;transition:background .2s,transform .15s,box-shadow .2s;position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);opacity:0;transition:opacity .2s}
+.btn-primary:hover{background:var(--orange2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,85,0,0.35)}
+.btn-primary:hover::before{opacity:1}
+.btn-outline{padding:16px 36px;background:transparent;color:var(--text);font-family:var(--cond);font-size:15px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid rgba(255,255,255,0.25);cursor:none;border-radius:2px;text-decoration:none;transition:border-color .2s,color .2s,transform .15s}
+.btn-outline:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+.scroll-indicator{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeInUp .6s 2.6s forwards}
+.scroll-indicator span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--orange),transparent);animation:scrollPulse 1.8s ease-in-out infinite}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--orange);padding:14px 0;overflow:hidden}
+.marquee-track{display:flex;gap:0;animation:marquee 25s linear infinite;width:max-content}
+.marquee-track:hover{animation-play-state:paused}
+.marquee-item{font-family:var(--cond);font-size:13px;font-weight:800;letter-spacing:.25em;text-transform:uppercase;color:#000;padding:0 32px;white-space:nowrap}
+.marquee-dot{color:rgba(0,0,0,0.4)}
+
+/* SECTIONS COMMON */
+section{padding:100px 0}
+.container{max-width:1280px;margin:0 auto;padding:0 40px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+.section-title{font-family:var(--cond);font-size:clamp(40px,5vw,68px);font-weight:900;line-height:.95;text-transform:uppercase;margin-bottom:20px}
+.section-title .num{color:var(--orange);margin-right:12px;font-size:.6em;vertical-align:.15em;opacity:.5}
+.section-desc{font-size:16px;color:var(--text-dim);line-height:1.7;max-width:560px}
+.section-line{width:48px;height:3px;background:var(--orange);margin-bottom:48px;border-radius:1px}
+
+/* REVEAL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(50px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal-right.visible{opacity:1;transform:none}
+.reveal-scale{opacity:0;transform:scale(.9);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal-scale.visible{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}
+.reveal-d4{transition-delay:.4s}.reveal-d5{transition-delay:.5s}.reveal-d6{transition-delay:.6s}
+
+/* BRANDS SECTION */
+#marcas{background:var(--bg2)}
+.brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:64px}
+.brand-card{background:var(--bg3);padding:48px 40px;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .3s,background .3s;cursor:none}
+.brand-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,85,0,0.05),transparent);opacity:0;transition:opacity .3s}
+.brand-card:hover{border-color:var(--border-orange);background:var(--bg4)}
+.brand-card:hover::before{opacity:1}
+.brand-card:hover .brand-arrow{color:var(--orange);transform:translateX(4px)}
+.brand-num{font-family:var(--cond);font-size:80px;font-weight:900;color:rgba(255,85,0,0.06);position:absolute;top:16px;right:24px;line-height:1;pointer-events:none;user-select:none}
+.brand-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dim));display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.brand-icon svg{width:24px;height:24px;fill:none;stroke:#000;stroke-width:2}
+.brand-name{font-family:var(--cond);font-size:36px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.brand-type{font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--orange);margin-bottom:16px}
+.brand-desc{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:28px}
+.brand-arrow{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);transition:color .2s,transform .2s;display:inline-flex;align-items:center;gap:8px}
+
+/* MOTAS NOVAS */
+#novas{background:var(--bg)}
+.filter-wrap{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px}
+.filter-btn{padding:9px 20px;background:transparent;border:1px solid var(--border);color:var(--text-dim);font-family:var(--cond);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:none;border-radius:2px;transition:all .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--orange);border-color:var(--orange);color:#000}
+.motas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+
+/* PRODUCT CARD (flip) */
+.mota-card{perspective:1000px;height:460px;cursor:none}
+.mota-card-inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.34,1.56,.64,1);transform-style:preserve-3d}
+.mota-card:hover .mota-card-inner{transform:rotateY(180deg)}
+.mota-front,.mota-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.mota-back{transform:rotateY(180deg);background:var(--bg3);display:flex;flex-direction:column;justify-content:center;padding:32px;border-color:var(--border-orange)}
+.mota-img-wrap{height:220px;overflow:hidden;background:var(--bg3);position:relative}
+.mota-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.mota-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent 60%)}
+.mota-badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2}
+.badge{font-family:var(--cond);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:2px}
+.badge-brand{background:rgba(9,9,9,0.85);color:var(--orange);border:1px solid var(--border-orange);backdrop-filter:blur(8px)}
+.badge-new{background:var(--orange);color:#000}
+.badge-hot{background:var(--red);color:#fff}
+.badge-used{background:rgba(255,255,255,0.12);color:var(--text);backdrop-filter:blur(8px)}
+.mota-info{padding:20px;background:var(--bg3)}
+.mota-cat{font-size:10px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+.mota-name{font-family:var(--cond);font-size:22px;font-weight:800;text-transform:uppercase;margin-bottom:4px;line-height:1.1}
+.mota-engine{font-size:13px;color:var(--text-dim);margin-bottom:12px}
+.mota-price{font-family:var(--cond);font-size:28px;font-weight:900;color:var(--orange)}
+.mota-price small{font-size:14px;font-weight:600;color:var(--text-muted)}
+/* Back side */
+.back-title{font-family:var(--cond);font-size:20px;font-weight:800;text-transform:uppercase;margin-bottom:20px;color:var(--orange)}
+.back-specs{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.back-specs li{display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.back-specs li span:first-child{color:var(--text-muted);font-weight:500}
+.back-specs li span:last-child{color:var(--text);font-weight:700}
+.btn-info{display:block;text-align:center;padding:13px;background:var(--orange);color:#000;font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s}
+.btn-info:hover{background:var(--orange2)}
+
+/* MOTAS USADAS */
+#usadas{background:var(--bg2)}
+.usadas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.usada-card{background:var(--bg3);border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:border-color .3s,transform .3s;cursor:none}
+.usada-card:hover{border-color:var(--border-orange);transform:translateY(-4px)}
+.usada-img{height:200px;overflow:hidden;position:relative;background:var(--bg4)}
+.usada-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.usada-card:hover .usada-img img{transform:scale(1.05)}
+.usada-body{padding:20px}
+.usada-name{font-family:var(--cond);font-size:22px;font-weight:800;text-transform:uppercase;margin-bottom:4px}
+.usada-detail{font-size:13px;color:var(--text-dim);margin-bottom:16px}
+.usada-price{font-family:var(--cond);font-size:30px;font-weight:900;color:var(--text);margin-bottom:16px}
+.usada-price.consult{font-size:18px;color:var(--text-dim)}
+.btn-usada{display:block;text-align:center;padding:12px;background:transparent;color:var(--orange);border:1.5px solid var(--border-orange);font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s,color .2s}
+.btn-usada:hover{background:var(--orange);color:#000}
+
+/* SERVICES */
+#servicos{background:var(--bg)}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:64px}
+.service-card{background:var(--bg3);padding:40px 32px;border:1px solid var(--border);transition:border-color .3s,background .3s;position:relative;overflow:hidden}
+.service-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;background:var(--orange);transition:width .4s}
+.service-card:hover{background:var(--bg4);border-color:var(--border-orange)}
+.service-card:hover::after{width:100%}
+.service-icon{width:52px;height:52px;margin-bottom:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-orange);border-radius:4px;transition:background .3s}
+.service-card:hover .service-icon{background:rgba(255,85,0,0.1)}
+.service-icon svg{width:26px;height:26px;stroke:var(--orange);fill:none;stroke-width:1.8}
+.service-title{font-family:var(--cond);font-size:22px;font-weight:800;text-transform:uppercase;margin-bottom:12px}
+.service-desc{font-size:14px;color:var(--text-dim);line-height:1.7}
+
+/* ABOUT */
+#sobre{background:var(--bg2);overflow:hidden}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);padding:24px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--orange)}
+.stat-num{font-family:var(--cond);font-size:48px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:4px}
+.stat-label{font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)}
+.about-img-wrap{position:relative}
+.about-img-main{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;display:block}
+.about-img-accent{position:absolute;bottom:-32px;left:-32px;width:55%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:4px solid var(--bg2);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.about-badge{position:absolute;top:24px;right:-16px;background:var(--orange);padding:16px 20px;text-align:center}
+.about-badge .num{font-family:var(--cond);font-size:40px;font-weight:900;color:#000;line-height:1}
+.about-badge .lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,0.65)}
+
+/* CONTACT */
+#contacto{background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:64px}
+.contact-info{display:flex;flex-direction:column;gap:32px}
+.contact-item{display:flex;gap:20px;align-items:flex-start}
+.contact-icon{width:44px;height:44px;flex-shrink:0;border:1px solid var(--border-orange);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.contact-icon svg{width:20px;height:20px;stroke:var(--orange);fill:none;stroke-width:1.8}
+.contact-label{font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.contact-value{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;text-decoration:none;transition:color .2s}
+.contact-value:hover{color:var(--orange)}
+.btn-whatsapp{display:inline-flex;align-items:center;gap:12px;padding:16px 28px;background:#25D366;color:#fff;font-family:var(--cond);font-size:15px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:background .2s,transform .15s;margin-top:8px}
+.btn-whatsapp:hover{background:#1ebe5d;transform:translateY(-2px)}
+.btn-whatsapp svg{width:22px;height:22px;fill:#fff}
+.contact-form{background:var(--bg3);border:1px solid var(--border);padding:40px;border-radius:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.form-group label{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.form-group input,.form-group textarea,.form-group select{background:var(--bg4);border:1px solid var(--border);color:var(--text);padding:13px 16px;font-family:var(--sans);font-size:14px;border-radius:2px;outline:none;transition:border-color .2s;width:100%}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--orange)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-group select option{background:var(--bg3)}
+.btn-submit{width:100%;padding:15px;background:var(--orange);color:#000;font-family:var(--cond);font-size:15px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:none;border-radius:2px;transition:background .2s,transform .15s;margin-top:8px}
+.btn-submit:hover{background:var(--orange2);transform:translateY(-1px)}
+
+/* HORÁRIOS */
+.hours-table{border-collapse:collapse;width:100%;margin-top:16px}
+.hours-table td{padding:8px 0;font-size:14px;border-bottom:1px solid var(--border)}
+.hours-table td:first-child{color:var(--text-dim);font-weight:500}
+.hours-table td:last-child{text-align:right;font-weight:700;color:var(--text)}
+
+/* FLOATING WHATSAPP */
+#whatsapp-fab{position:fixed;bottom:28px;right:28px;z-index:800;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,0.4);transition:transform .2s,box-shadow .2s;text-decoration:none;cursor:none}
+#whatsapp-fab:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,0.55)}
+#whatsapp-fab svg{width:28px;height:28px;fill:#fff}
+
+/* BACK TO TOP */
+#back-top{position:fixed;bottom:96px;right:28px;z-index:800;width:44px;height:44px;background:var(--bg3);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:none;opacity:0;transform:translateY(16px);transition:all .3s;text-decoration:none}
+#back-top.visible{opacity:1;transform:none}
+#back-top:hover{border-color:var(--orange);background:rgba(255,85,0,0.12)}
+#back-top svg{width:18px;height:18px;stroke:var(--text);fill:none;stroke-width:2}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:64px 0 32px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand-name{font-family:var(--cond);font-size:32px;font-weight:900;letter-spacing:.05em;margin-bottom:12px}
+.footer-brand-name span{color:var(--orange)}
+.footer-tagline{font-size:14px;color:var(--text-dim);line-height:1.6;max-width:260px;margin-bottom:24px}
+.footer-socials{display:flex;gap:12px}
+.social-btn{width:38px;height:38px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s;text-decoration:none;cursor:none}
+.social-btn:hover{border-color:var(--orange);background:rgba(255,85,0,0.1)}
+.social-btn svg{width:18px;height:18px;fill:var(--text-dim);transition:fill .2s}
+.social-btn:hover svg{fill:var(--orange)}
+.footer-col h4{font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul li a{font-size:14px;color:var(--text-dim);text-decoration:none;transition:color .2s}
+.footer-col ul li a:hover{color:var(--orange)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:28px;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:12px;color:var(--text-muted);letter-spacing:.05em}
+.footer-legal{display:flex;gap:24px}
+.footer-legal a{font-size:12px;color:var(--text-muted);text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--text)}
+
+/* MAP */
+.map-wrap{margin-top:40px;border-radius:4px;overflow:hidden;height:220px;border:1px solid var(--border)}
+.map-wrap iframe{width:100%;height:100%;border:none;filter:grayscale(1) invert(1) contrast(.8)}
+
+/* KEYFRAMES */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes wordReveal{from{transform:translateY(110%)}to{transform:translateY(0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scrollPulse{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.4;transform:scaleY(.6)}}
+@keyframes loaderOut{to{opacity:0;pointer-events:none}}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .nav-links{display:none}
+  .nav-right .nav-phone{display:none}
+  .hamburger{display:flex}
+  .brands-grid{grid-template-columns:1fr}
+  .motas-grid{grid-template-columns:repeat(2,1fr)}
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .about-img-wrap{order:-1;max-height:400px;overflow:hidden}
+  .about-img-main{width:100%;height:100%;object-fit:cover}
+  .contact-grid{grid-template-columns:1fr;gap:40px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .usadas-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .container{padding:0 20px}
+  section{padding:72px 0}
+  .hero-ctas{flex-direction:column;align-items:center}
+  .motas-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr}
+  .usadas-grid{grid-template-columns:1fr}
+  .about-stats{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+  .brands-grid{grid-template-columns:1fr}
+  .mota-card{height:auto}
+  .mota-card:hover .mota-card-inner{transform:none}
+  .mota-back{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div id="loader-logo">GP<span>MOTORS</span></div>
+  <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+  <div id="loader-num">0%</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- SCROLL PROGRESS -->
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">GP<span>MOTORS</span></a>
+  <ul class="nav-links">
+    <li><a href="#marcas">Marcas</a></li>
+    <li><a href="#novas">Motas Novas</a></li>
+    <li><a href="#usadas">Motas Usadas</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="tel:917091765" class="nav-phone">917 091 765</a>
+    <a href="#novas" class="btn-nav">Ver Stock</a>
+    <button class="hamburger" id="ham-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div id="nav-drawer">
+  <a href="#marcas" class="drawer-link">Marcas</a>
+  <a href="#novas" class="drawer-link">Motas Novas</a>
+  <a href="#usadas" class="drawer-link">Motas Usadas</a>
+  <a href="#servicos" class="drawer-link">Serviços</a>
+  <a href="#sobre" class="drawer-link">Sobre</a>
+  <a href="#contacto" class="drawer-link">Contacto</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Penafiel · Portugal · Concessionário Oficial</div>
+    <h1 class="hero-title">
+      <span class="word"><span class="word-inner">A</span></span>
+      <span class="word"><span class="word-inner accent">Tua</span></span>
+      <span class="word"><span class="word-inner">Próxima</span></span>
+      <span class="word"><span class="word-inner accent">Mota</span></span>
+      <span class="word"><span class="word-inner">Está</span></span>
+      <span class="word"><span class="word-inner">Aqui</span></span>
+    </h1>
+    <p class="hero-sub">TGB &nbsp;·&nbsp; Macbor &nbsp;·&nbsp; Cyclone</p>
+    <div class="hero-ctas">
+      <a href="#novas" class="btn-primary magnetic">Ver Stock Novo</a>
+      <a href="#usadas" class="btn-outline magnetic">Motas Usadas</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">TGB</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Macbor</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Cyclone</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Motas Novas</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Motas Usadas</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Peças</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Acessórios</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Oficina</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">TGB</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Macbor</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Cyclone</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Motas Novas</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Motas Usadas</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Peças</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Acessórios</span><span class="marquee-item marquee-dot">·</span>
+    <span class="marquee-item">Oficina</span><span class="marquee-item marquee-dot">·</span>
+  </div>
+</div>
+
+<!-- MARCAS -->
+<section id="marcas">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Concessionário Oficial</div>
+      <h2 class="section-title"><span class="num">01</span>Marcas</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="brands-grid">
+      <!-- TGB -->
+      <div class="brand-card reveal reveal-d1">
+        <span class="brand-num">01</span>
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg>
+        </div>
+        <div class="brand-name">TGB</div>
+        <div class="brand-type">Quads & ATV</div>
+        <p class="brand-desc">Concessionário oficial TGB em Penafiel. Quads e ATVs de alta performance para todo o terreno, com modelos desde 300cc a 1000cc.</p>
+        <a href="#novas" class="brand-arrow">Ver Modelos TGB <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <!-- MACBOR -->
+      <div class="brand-card reveal reveal-d2">
+        <span class="brand-num">02</span>
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M12 9V5M8 9V7M16 9V7"/></svg>
+        </div>
+        <div class="brand-name">Macbor</div>
+        <div class="brand-type">Trail · Naked · Adventure</div>
+        <p class="brand-desc">A Macbor combina design europeu com tecnologia de ponta. Montana XR5 510, Rockster 410, Eight Mile 125 e mais — motas para cada estilo.</p>
+        <a href="#novas" class="brand-arrow">Ver Modelos Macbor <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <!-- CYCLONE -->
+      <div class="brand-card reveal reveal-d3">
+        <span class="brand-num">03</span>
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M2 12h4M18 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div class="brand-name">Cyclone</div>
+        <div class="brand-type">Trail · Sport 125cc</div>
+        <p class="brand-desc">A Cyclone traz o espírito aventureiro com a Carrera 125 — trail moderna com motor 125cc, rodas de raio e iluminação LED completa.</p>
+        <a href="#novas" class="brand-arrow">Ver Modelos Cyclone <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOTAS NOVAS -->
+<section id="novas">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Concessionário Oficial TGB · Macbor · Cyclone</div>
+      <h2 class="section-title"><span class="num">02</span>Motas Novas</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">Descobre todo o stock de motas novas. Passa o rato por cima de cada mota para ver as especificações técnicas.</p>
+    </div>
+
+    <div class="filter-wrap reveal" style="margin-top:40px">
+      <button class="filter-btn active" data-filter="all">Todas</button>
+      <button class="filter-btn" data-filter="trail">Trail / Adventure</button>
+      <button class="filter-btn" data-filter="naked">Naked / Street</button>
+      <button class="filter-btn" data-filter="125">125cc</button>
+      <button class="filter-btn" data-filter="quad">Quads / ATV</button>
+    </div>
+
+    <div class="motas-grid">
+
+      <!-- Montana XR5 510 -->
+      <div class="mota-card reveal reveal-d1" data-category="trail">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Macbor Montana XR5 510" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">Macbor</span>
+                <span class="badge badge-hot">Destaque</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Trail / Adventure</div>
+              <div class="mota-name">Montana XR5 510</div>
+              <div class="mota-engine">498cc · Liquid cooled · ABS 3 modos</div>
+              <div class="mota-price">€5.999 <small>IVA incl.</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>498cc mono</span></li>
+              <li><span>Potência</span><span>48 CV</span></li>
+              <li><span>Suspensão</span><span>KYB multi-adj.</span></li>
+              <li><span>Injeção</span><span>BOSCH EFI</span></li>
+              <li><span>ABS</span><span>3 modos</span></li>
+              <li><span>Painel</span><span>TFT 5" mirroring</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rockster 410 -->
+      <div class="mota-card reveal reveal-d2" data-category="naked">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=600&q=80" alt="Macbor Rockster 410" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">Macbor</span>
+                <span class="badge badge-new">Novo</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Naked / Street</div>
+              <div class="mota-name">Rockster 410</div>
+              <div class="mota-engine">401cc · 2 cilindros · TCS</div>
+              <div class="mota-price">€5.199 <small>IVA incl.</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>401cc bicilíndrico</span></li>
+              <li><span>Potência</span><span>42 CV / 9.000 rpm</span></li>
+              <li><span>Binário</span><span>32,8 Nm</span></li>
+              <li><span>Traction Ctrl</span><span>TCS</span></li>
+              <li><span>Painel</span><span>TFT 5"</span></li>
+              <li><span>Luz</span><span>Full LED</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eight Mile 125 -->
+      <div class="mota-card reveal reveal-d3" data-category="naked 125">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80" alt="Macbor Eight Mile 125" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">Macbor</span>
+                <span class="badge badge-new">125cc</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Naked / 125cc</div>
+              <div class="mota-name">Eight Mile 125</div>
+              <div class="mota-engine">125cc · Liquid cooled · Urban</div>
+              <div class="mota-price">€2.690 <small>IVA incl.</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>125cc mono 4T</span></li>
+              <li><span>Potência</span><span>7,1 kW / 8.000 rpm</span></li>
+              <li><span>Binário</span><span>9,5 Nm / 6.500 rpm</span></li>
+              <li><span>Depósito</span><span>12,5 L</span></li>
+              <li><span>Refrigeração</span><span>Líquido</span></li>
+              <li><span>Carta</span><span>A1 / B (carta de carro)</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Montana XR1 125 EVO -->
+      <div class="mota-card reveal reveal-d1" data-category="trail 125">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1590736969596-55a2a2e26e77?w=600&q=80" alt="Macbor Montana XR1 125 EVO" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">Macbor</span>
+                <span class="badge badge-new">125cc</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Trail / 125cc</div>
+              <div class="mota-name">Montana XR1 125 EVO</div>
+              <div class="mota-engine">125cc · Trail · Full LED</div>
+              <div class="mota-price"><small>A consultar</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>125cc mono 4T</span></li>
+              <li><span>Tipo</span><span>Trail / Adventure</span></li>
+              <li><span>Luz</span><span>Full LED</span></li>
+              <li><span>Carta</span><span>A1 / B</span></li>
+              <li><span>Roda frente</span><span>19"</span></li>
+              <li><span>Roda trás</span><span>17"</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cyclone Carrera 125 -->
+      <div class="mota-card reveal reveal-d2" data-category="trail 125">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=600&q=80" alt="Cyclone Carrera 125" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">Cyclone</span>
+                <span class="badge badge-new">125cc</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Trail / 125cc</div>
+              <div class="mota-name">Carrera 125</div>
+              <div class="mota-engine">125cc · Air cooled · 12,4 CV</div>
+              <div class="mota-price"><small>A consultar</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>125cc 4T ar</span></li>
+              <li><span>Potência</span><span>12,4 CV</span></li>
+              <li><span>Roda frente</span><span>19" raios</span></li>
+              <li><span>Roda trás</span><span>17" raios</span></li>
+              <li><span>Painel</span><span>LCD digital cor</span></li>
+              <li><span>Luz</span><span>Full LED</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TGB Blade 1000 LTX EPS -->
+      <div class="mota-card reveal reveal-d3" data-category="quad">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1637587569940-c01d8b61cd0e?w=600&q=80" alt="TGB Blade 1000 LTX EPS" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">TGB</span>
+                <span class="badge badge-hot">Top</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Quad / ATV</div>
+              <div class="mota-name">Blade 1000 LTX EPS</div>
+              <div class="mota-engine">1000cc · 4x4 · EPS</div>
+              <div class="mota-price">€10.487 <small>IVA incl.</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>1000cc V-twin</span></li>
+              <li><span>Tipo</span><span>ATV Sport 4x4</span></li>
+              <li><span>Direção</span><span>EPS assistida</span></li>
+              <li><span>Transmissão</span><span>CVT automática</span></li>
+              <li><span>Suspensão</span><span>Independente</span></li>
+              <li><span>ABS</span><span>Não</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TGB Blade 1000 LTX EPS ABS -->
+      <div class="mota-card reveal reveal-d1" data-category="quad">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=600&q=80" alt="TGB Blade 1000 LTX EPS ABS" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-brand">TGB</span>
+                <span class="badge badge-hot">ABS</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Quad / ATV</div>
+              <div class="mota-name">Blade 1000 LTX EPS ABS</div>
+              <div class="mota-engine">1000cc · 4x4 · EPS · ABS</div>
+              <div class="mota-price">€11.487 <small>IVA incl.</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>1000cc V-twin</span></li>
+              <li><span>Tipo</span><span>ATV Sport 4x4</span></li>
+              <li><span>Direção</span><span>EPS assistida</span></li>
+              <li><span>Transmissão</span><span>CVT automática</span></li>
+              <li><span>Suspensão</span><span>Independente</span></li>
+              <li><span>ABS</span><span>Sim</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini Cross Criança -->
+      <div class="mota-card reveal reveal-d2" data-category="125">
+        <div class="mota-card-inner">
+          <div class="mota-front">
+            <div class="mota-img-wrap">
+              <img src="https://images.unsplash.com/photo-1616088408155-b2a52ef64d99?w=600&q=80" alt="Mini Cross Criança" loading="lazy">
+              <div class="mota-badges">
+                <span class="badge badge-new">Criança</span>
+              </div>
+            </div>
+            <div class="mota-info">
+              <div class="mota-cat">Mini Cross / Criança</div>
+              <div class="mota-name">Mini Cross 49cc</div>
+              <div class="mota-engine">49cc · Travão a disco · Velocidade ajustável</div>
+              <div class="mota-price">€450 <small>IVA incl.</small></div>
+            </div>
+          </div>
+          <div class="mota-back">
+            <div class="back-title">Especificações</div>
+            <ul class="back-specs">
+              <li><span>Motor</span><span>49cc 2T</span></li>
+              <li><span>Velocidade</span><span>Ajustável adulto</span></li>
+              <li><span>Travão</span><span>Disco</span></li>
+              <li><span>Ideal</span><span>5 a 12 anos</span></li>
+              <li><span>Cor</span><span>Várias opções</span></li>
+              <li><span>Entrega</span><span>Disponível</span></li>
+            </ul>
+            <a href="tel:917091765" class="btn-info">Pedir Informação</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /motas-grid -->
+  </div>
+</section>
+
+<!-- MOTAS USADAS -->
+<section id="usadas">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Stock Disponível</div>
+      <h2 class="section-title"><span class="num">03</span>Motas Usadas</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">Motas usadas selecionadas e verificadas pela nossa equipa. Peça informação sobre o estado e histórico de qualquer modelo.</p>
+    </div>
+    <div class="usadas-grid">
+
+      <div class="usada-card reveal reveal-d1">
+        <div class="usada-img">
+          <img src="https://images.unsplash.com/photo-1635073942784-8e3bb1c3e42d?w=600&q=80" alt="Honda CB500F" loading="lazy">
+          <div class="mota-badges" style="position:absolute;top:12px;left:12px">
+            <span class="badge badge-brand">Honda</span>
+            <span class="badge badge-used">Usado</span>
+          </div>
+        </div>
+        <div class="usada-body">
+          <div class="usada-name">CB500F</div>
+          <div class="usada-detail">Street Naked · 471cc bicilíndrico · Excelente estado</div>
+          <div class="usada-price">€5.950</div>
+          <a href="tel:917091765" class="btn-usada">Pedir Informação</a>
+        </div>
+      </div>
+
+      <div class="usada-card reveal reveal-d2">
+        <div class="usada-img">
+          <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80" alt="Husqvarna Svartpilen" loading="lazy">
+          <div class="mota-badges" style="position:absolute;top:12px;left:12px">
+            <span class="badge badge-brand">Husqvarna</span>
+            <span class="badge badge-used">Usado</span>
+          </div>
+        </div>
+        <div class="usada-body">
+          <div class="usada-name">Svartpilen</div>
+          <div class="usada-detail">Scrambler Urban · 125cc · Design nórdico único</div>
+          <div class="usada-price">€3.450</div>
+          <a href="tel:917091765" class="btn-usada">Pedir Informação</a>
+        </div>
+      </div>
+
+      <div class="usada-card reveal reveal-d3">
+        <div class="usada-img">
+          <img src="https://images.unsplash.com/photo-1558981420-87aa9dad1c89?w=600&q=80" alt="Yamaha Banshee 350" loading="lazy">
+          <div class="mota-badges" style="position:absolute;top:12px;left:12px">
+            <span class="badge badge-brand">Yamaha</span>
+            <span class="badge badge-used">Usado</span>
+          </div>
+        </div>
+        <div class="usada-body">
+          <div class="usada-name">Banshee 350</div>
+          <div class="usada-detail">ATV Sport · 347cc 2T · Revisão geral feita</div>
+          <div class="usada-price consult">Preço sob consulta</div>
+          <a href="tel:917091765" class="btn-usada">Pedir Informação</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">O Que Oferecemos</div>
+      <h2 class="section-title"><span class="num">04</span>Serviços</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal reveal-d1">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="service-title">Oficina</div>
+        <p class="service-desc">Manutenção e reparação de todas as marcas. Técnicos especializados com equipamento de diagnóstico de última geração.</p>
+      </div>
+      <div class="service-card reveal reveal-d2">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="service-title">Peças Originais</div>
+        <p class="service-desc">Stock permanente de peças originais TGB, Macbor e Cyclone. Encomendas rápidas para outras marcas com entrega ao domicílio.</p>
+      </div>
+      <div class="service-card reveal reveal-d3">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="service-title">Acessórios</div>
+        <p class="service-desc">Equipamento de proteção, capacetes, roupa técnica, malas, GPS e todos os acessórios que precisas para andar com estilo e segurança.</p>
+      </div>
+      <div class="service-card reveal reveal-d4">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="service-title">Financiamento</div>
+        <p class="service-desc">Soluções de crédito personalizadas para tornar a tua mota de sonho uma realidade. Simulação sem compromisso no local.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="reveal">
+          <div class="section-label">Quem Somos</div>
+          <h2 class="section-title"><span class="num">05</span>Sobre a GP Motors</h2>
+          <div class="section-line"></div>
+        </div>
+        <p class="section-desc reveal" style="max-width:100%;margin-bottom:24px">A GP Motors nasceu da paixão pelas duas rodas. Somos um concessionário oficial em Penafiel, dedicados a oferecer a melhor experiência de compra e pós-venda no mercado das motas.</p>
+        <p class="section-desc reveal" style="max-width:100%;color:var(--text-muted)">Representamos marcas de qualidade como TGB, Macbor e Cyclone, com uma equipa especializada pronta para te aconselhar na escolha certa — seja a tua primeira mota ou a próxima adição à coleção.</p>
+        <div class="about-stats">
+          <div class="stat-card reveal reveal-d1">
+            <div class="stat-num" data-count="3">0</div>
+            <div class="stat-label">Marcas Oficiais</div>
+          </div>
+          <div class="stat-card reveal reveal-d2">
+            <div class="stat-num" data-count="10">0</div>
+            <div class="stat-label">Anos Experiência</div>
+          </div>
+          <div class="stat-card reveal reveal-d3">
+            <div class="stat-num" data-count="500">0</div>
+            <div class="stat-label">Motas Vendidas</div>
+          </div>
+          <div class="stat-card reveal reveal-d4">
+            <div class="stat-num" data-count="4">0</div>
+            <div class="stat-label">Serviços Disponíveis</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-img-wrap reveal-right">
+        <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=800&q=80" alt="GP Motors Showroom" class="about-img-main" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=400&q=80" alt="Mota detalhe" class="about-img-accent" loading="lazy">
+        <div class="about-badge">
+          <div class="num">10+</div>
+          <div class="lbl">Anos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Fala Connosco</div>
+      <h2 class="section-title"><span class="num">06</span>Contacto</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal-left">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Morada</div>
+            <div class="contact-value">Av. Central de Oldrões, 570<br>4575-261 Oldrões — Penafiel</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.53 2 2 0 0 1 3.6 1.37h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Telefone</div>
+            <a href="tel:917091765" class="contact-value">917 091 765</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Email</div>
+            <a href="mailto:gpmotors.014@gmail.com" class="contact-value">gpmotors.014@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Horários</div>
+            <table class="hours-table">
+              <tr><td>Segunda – Sexta</td><td>09:00 – 18:30</td></tr>
+              <tr><td>Sábado</td><td>09:00 – 13:00</td></tr>
+              <tr><td>Domingo</td><td>Fechado</td></tr>
+            </table>
+          </div>
+        </div>
+        <a href="https://wa.me/351917091765" class="btn-whatsapp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          Falar no WhatsApp
+        </a>
+
+        <div class="map-wrap">
+          <iframe
+            src="https://maps.google.com/maps?q=Av.+Central+de+Oldr%C3%B5es+570+Penafiel&output=embed&z=15"
+            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+      <div class="contact-form reveal-right">
+        <h3 style="font-family:var(--cond);font-size:26px;font-weight:800;text-transform:uppercase;margin-bottom:28px">Enviar Mensagem</h3>
+        <form id="contact-form" onsubmit="handleForm(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome</label>
+              <input type="text" placeholder="O teu nome" required>
+            </div>
+            <div class="form-group">
+              <label>Telefone</label>
+              <input type="tel" placeholder="9XX XXX XXX">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="email@exemplo.pt" required>
+          </div>
+          <div class="form-group">
+            <label>Assunto</label>
+            <select>
+              <option value="">Seleciona um assunto</option>
+              <option>Informação sobre mota nova</option>
+              <option>Informação sobre mota usada</option>
+              <option>Peças e acessórios</option>
+              <option>Marcação oficina</option>
+              <option>Financiamento</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mensagem</label>
+            <textarea placeholder="Escreve a tua mensagem aqui..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit magnetic">Enviar Mensagem</button>
+          <div id="form-success" style="display:none;margin-top:16px;padding:16px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:2px;font-size:14px;color:#25D366">
+            ✓ Mensagem enviada! Entraremos em contacto brevemente.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">GP<span>MOTORS</span></div>
+        <p class="footer-tagline">Comércio de motas, peças e acessórios. Concessionário oficial TGB, Macbor e Cyclone em Penafiel.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/gpmotors14/" class="social-btn" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/gpmotors14/" class="social-btn" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://wa.me/351917091765" class="social-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Motas</h4>
+        <ul>
+          <li><a href="#novas">Motas Novas</a></li>
+          <li><a href="#usadas">Motas Usadas</a></li>
+          <li><a href="#marcas">Macbor</a></li>
+          <li><a href="#marcas">TGB</a></li>
+          <li><a href="#marcas">Cyclone</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li><a href="#servicos">Oficina</a></li>
+          <li><a href="#servicos">Peças Originais</a></li>
+          <li><a href="#servicos">Acessórios</a></li>
+          <li><a href="#servicos">Financiamento</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:917091765">917 091 765</a></li>
+          <li><a href="mailto:gpmotors.014@gmail.com">Email</a></li>
+          <li><a href="https://www.instagram.com/gpmotors14/">Instagram</a></li>
+          <li><a href="https://www.facebook.com/gpmotors14/">Facebook</a></li>
+          <li><a href="#contacto">Como Chegar</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 GP Motors – Todos os direitos reservados</span>
+      <div class="footer-legal">
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING BTNS -->
+<a href="https://wa.me/351917091765" id="whatsapp-fab" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+<a href="#" id="back-top" aria-label="Voltar ao topo">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</a>
+
+<script>
+// ---- LOADER ----
+(function(){
+  const loader = document.getElementById('loader');
+  const bar = document.getElementById('loader-bar');
+  const num = document.getElementById('loader-num');
+  let p = 0;
+  const iv = setInterval(()=>{
+    p += Math.random()*18 + 4;
+    if(p >= 100){ p = 100; clearInterval(iv); }
+    bar.style.width = p + '%';
+    num.textContent = Math.floor(p) + '%';
+    if(p >= 100){
+      setTimeout(()=>{
+        loader.style.transition='opacity .6s';
+        loader.style.opacity='0';
+        setTimeout(()=>{ loader.style.display='none'; }, 600);
+      }, 300);
+    }
+  }, 80);
+})();
+
+// ---- CURSOR ----
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+(function raf(){
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(raf);
+})();
+document.querySelectorAll('a,button,.filter-btn,.mota-card,.brand-card,.usada-card,.service-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ ring.style.width='56px'; ring.style.height='56px'; ring.style.borderColor='var(--orange)'; });
+  el.addEventListener('mouseleave',()=>{ ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='var(--orange)'; });
+});
+
+// ---- NAV SCROLL ----
+const navbar = document.getElementById('navbar');
+const progress = document.getElementById('progress');
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll',()=>{
+  const s = window.scrollY;
+  const h = document.body.scrollHeight - window.innerHeight;
+  progress.style.width = (s/h*100)+'%';
+  if(s>60) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+  if(s>400) backTop.classList.add('visible'); else backTop.classList.remove('visible');
+});
+
+// ---- HAMBURGER ----
+const hamBtn = document.getElementById('ham-btn');
+const drawer = document.getElementById('nav-drawer');
+hamBtn.addEventListener('click',()=>{
+  drawer.classList.toggle('open');
+  const spans = hamBtn.querySelectorAll('span');
+  if(drawer.classList.contains('open')){
+    spans[0].style.transform='translateY(7px) rotate(45deg)';
+    spans[1].style.opacity='0';
+    spans[2].style.transform='translateY(-7px) rotate(-45deg)';
+  } else {
+    spans[0].style.transform=''; spans[1].style.opacity=''; spans[2].style.transform='';
+  }
+});
+document.querySelectorAll('.drawer-link').forEach(l=>l.addEventListener('click',()=>{
+  drawer.classList.remove('open');
+  const spans = hamBtn.querySelectorAll('span');
+  spans[0].style.transform=''; spans[1].style.opacity=''; spans[2].style.transform='';
+}));
+
+// ---- REVEAL ----
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+},{ threshold:.1, rootMargin:'0px 0px -60px 0px' });
+revealEls.forEach(el=>io.observe(el));
+
+// ---- COUNTERS ----
+const countEls = document.querySelectorAll('[data-count]');
+const cio = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const target = parseInt(e.target.dataset.count);
+      let start = 0;
+      const dur = 1500;
+      const step = ts=>{
+        if(!start) start=ts;
+        const prog = Math.min((ts-start)/dur,1);
+        e.target.textContent = Math.floor(prog*target);
+        if(prog<1) requestAnimationFrame(step);
+        else e.target.textContent = target + (target>=100?'+':'');
+      };
+      requestAnimationFrame(step);
+      cio.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+countEls.forEach(el=>cio.observe(el));
+
+// ---- PRODUCT FILTER ----
+const filterBtns = document.querySelectorAll('.filter-btn');
+const motaCards = document.querySelectorAll('.mota-card');
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    motaCards.forEach(card=>{
+      const cats = card.dataset.category || '';
+      if(f==='all' || cats.includes(f)){
+        card.style.opacity='1'; card.style.transform='scale(1)'; card.style.display='block';
+      } else {
+        card.style.opacity='0'; card.style.transform='scale(0.9)';
+        setTimeout(()=>{ if(!cats.includes(document.querySelector('.filter-btn.active').dataset.filter) && document.querySelector('.filter-btn.active').dataset.filter!=='all') card.style.display='none'; },300);
+      }
+    });
+  });
+});
+
+// ---- MAGNETIC BUTTONS ----
+document.querySelectorAll('.magnetic').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r = el.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width/2);
+    const dy = e.clientY - (r.top + r.height/2);
+    el.style.transform=`translate(${dx*.25}px,${dy*.25}px)`;
+  });
+  el.addEventListener('mouseleave',()=>{ el.style.transform=''; });
+});
+
+// ---- FORM ----
+function handleForm(e){
+  e.preventDefault();
+  document.getElementById('form-success').style.display='block';
+  e.target.reset();
+}
+
+// ---- THREE.JS HERO ----
+(function(){
+  if(typeof THREE === 'undefined') return;
+  const canvas = document.getElementById('hero-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+  renderer.setClearColor(0x000000, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, canvas.offsetWidth/canvas.offsetHeight, 0.1, 1000);
+  camera.position.set(0, 1, 8);
+
+  // LIGHTS
+  const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+  scene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xFF5500, 2.5);
+  dirLight.position.set(5, 5, 5);
+  scene.add(dirLight);
+  const backLight = new THREE.DirectionalLight(0xff3300, 1.2);
+  backLight.position.set(-5, -2, -3);
+  scene.add(backLight);
+  const pointLight = new THREE.PointLight(0xFF5500, 3, 20);
+  pointLight.position.set(0, 2, 4);
+  scene.add(pointLight);
+
+  // Materials
+  const matDark = new THREE.MeshPhongMaterial({ color: 0x111111, shininess: 120, specular: 0x444444 });
+  const matOrange = new THREE.MeshPhongMaterial({ color: 0xFF5500, shininess: 200, specular: 0xff9966, emissive: 0x220a00 });
+  const matChrome = new THREE.MeshPhongMaterial({ color: 0xcccccc, shininess: 300, specular: 0xffffff });
+  const matBlack = new THREE.MeshPhongMaterial({ color: 0x050505, shininess: 80 });
+  const matRed = new THREE.MeshPhongMaterial({ color: 0xcc0000, shininess: 180, specular: 0xff4444 });
+
+  // Group
+  const moto = new THREE.Group();
+  scene.add(moto);
+
+  // FRAME
+  const frameMat = matDark.clone();
+  frameMat.color.set(0x1a1a1a);
+  const frameGeo = new THREE.BoxGeometry(0.18, 0.55, 2.0);
+  const frame = new THREE.Mesh(frameGeo, frameMat);
+  frame.position.set(0, 0.55, 0.05);
+  frame.rotation.x = 0.05;
+  moto.add(frame);
+
+  // FUEL TANK
+  const tankGeo = new THREE.CylinderGeometry(0.25, 0.2, 0.7, 12);
+  const tank = new THREE.Mesh(tankGeo, matOrange);
+  tank.position.set(0, 1.05, 0.1);
+  tank.rotation.z = Math.PI/2;
+  tank.rotation.y = Math.PI/2;
+  moto.add(tank);
+
+  // SEAT
+  const seatGeo = new THREE.BoxGeometry(0.26, 0.08, 0.9);
+  const seat = new THREE.Mesh(seatGeo, matBlack);
+  seat.position.set(0, 1.0, -0.55);
+  moto.add(seat);
+
+  // FAIRING
+  const fairGeo = new THREE.BoxGeometry(0.24, 0.55, 0.5);
+  const fair = new THREE.Mesh(fairGeo, matOrange);
+  fair.position.set(0, 0.85, 0.85);
+  fair.rotation.x = -0.15;
+  moto.add(fair);
+
+  // HEADLIGHT
+  const hGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.06, 16);
+  const headlight = new THREE.Mesh(hGeo, matChrome);
+  headlight.rotation.x = Math.PI/2;
+  headlight.position.set(0, 0.9, 1.12);
+  moto.add(headlight);
+  const glowLight = new THREE.PointLight(0xffffff, 2, 3);
+  glowLight.position.set(0, 0.9, 1.3);
+  moto.add(glowLight);
+
+  // EXHAUST
+  const exGeo = new THREE.CylinderGeometry(0.04, 0.06, 1.1, 8);
+  const exhaust = new THREE.Mesh(exGeo, matChrome);
+  exhaust.position.set(0.2, 0.38, -0.35);
+  exhaust.rotation.z = 1.35;
+  moto.add(exhaust);
+
+  // ENGINE
+  const engGeo = new THREE.BoxGeometry(0.4, 0.38, 0.45);
+  const engine = new THREE.Mesh(engGeo, matChrome);
+  engine.position.set(0, 0.42, 0.12);
+  moto.add(engine);
+  const eng2Geo = new THREE.CylinderGeometry(0.1, 0.1, 0.36, 8);
+  const cyl = new THREE.Mesh(eng2Geo, matChrome);
+  cyl.position.set(0, 0.65, 0.12);
+  moto.add(cyl);
+
+  // FRONT FORK
+  const forkGeo = new THREE.CylinderGeometry(0.035, 0.035, 1.0, 8);
+  [-0.1, 0.1].forEach(x=>{
+    const fork = new THREE.Mesh(forkGeo, matChrome);
+    fork.position.set(x, 0.6, 0.85);
+    fork.rotation.x = 0.2;
+    moto.add(fork);
+  });
+
+  // REAR SHOCK
+  const shockGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.7, 6);
+  const shock = new THREE.Mesh(shockGeo, matChrome);
+  shock.position.set(0.15, 0.55, -0.6);
+  shock.rotation.x = 0.5;
+  moto.add(shock);
+
+  // WHEELS
+  function makeWheel(radius, x, z, mat){
+    const g = new THREE.Group();
+    // Tire
+    const tireGeo = new THREE.TorusGeometry(radius, 0.13, 16, 40);
+    const tire = new THREE.Mesh(tireGeo, matBlack);
+    g.add(tire);
+    // Rim
+    const rimGeo = new THREE.TorusGeometry(radius-0.06, 0.04, 8, 32);
+    const rim = new THREE.Mesh(rimGeo, mat);
+    g.add(rim);
+    // Hub
+    const hubGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.14, 12);
+    const hub = new THREE.Mesh(hubGeo, mat);
+    hub.rotation.x = Math.PI/2;
+    g.add(hub);
+    // Spokes
+    for(let i=0;i<6;i++){
+      const spokeGeo = new THREE.BoxGeometry(0.018, 2*(radius-0.06), 0.018);
+      const spoke = new THREE.Mesh(spokeGeo, mat);
+      spoke.rotation.z = (Math.PI/6)*i;
+      g.add(spoke);
+    }
+    g.position.set(x, 0, z);
+    g.rotation.y = Math.PI/2;
+    return g;
+  }
+
+  const frontWheel = makeWheel(0.48, 0, 0.88);
+  const rearWheel = makeWheel(0.45, 0, -0.88);
+  [frontWheel, rearWheel].forEach(w=>{ moto.add(w); });
+
+  // Axles
+  [-0.88, 0.88].forEach(z=>{
+    const axleGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.36, 8);
+    const axle = new THREE.Mesh(axleGeo, matChrome);
+    axle.rotation.z = Math.PI/2;
+    axle.position.set(0, 0, z);
+    moto.add(axle);
+  });
+
+  // HANDLEBARS
+  const hbarGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.9, 8);
+  const hbar = new THREE.Mesh(hbarGeo, matChrome);
+  hbar.rotation.z = Math.PI/2;
+  hbar.position.set(0, 1.15, 0.8);
+  moto.add(hbar);
+  [-0.44, 0.44].forEach(x=>{
+    const gripGeo = new THREE.CylinderGeometry(0.035, 0.035, 0.14, 8);
+    const grip = new THREE.Mesh(gripGeo, matBlack);
+    grip.rotation.z = Math.PI/2;
+    grip.position.set(x, 1.15, 0.8);
+    moto.add(grip);
+  });
+
+  // TAIL FAIRING
+  const tailGeo = new THREE.BoxGeometry(0.18, 0.12, 0.5);
+  const tail = new THREE.Mesh(tailGeo, matOrange);
+  tail.position.set(0, 0.95, -0.95);
+  tail.rotation.x = 0.3;
+  moto.add(tail);
+
+  // TAIL LIGHT
+  const tailLightGeo = new THREE.BoxGeometry(0.18, 0.06, 0.06);
+  const tailLight = new THREE.Mesh(tailLightGeo, matRed);
+  tailLight.position.set(0, 0.88, -1.22);
+  moto.add(tailLight);
+  const rearPoint = new THREE.PointLight(0xff0000, 1.5, 5);
+  rearPoint.position.set(0, 0.9, -1.4);
+  moto.add(rearPoint);
+
+  // Scale and position
+  moto.scale.set(0.8, 0.8, 0.8);
+  moto.position.set(1.5, -0.5, 0);
+  moto.rotation.y = -0.4;
+
+  // PARTICLES
+  const partCount = 200;
+  const partGeo = new THREE.BufferGeometry();
+  const positions = new Float32Array(partCount * 3);
+  for(let i=0;i<partCount*3;i++) positions[i] = (Math.random()-0.5)*18;
+  partGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+  const partMat = new THREE.PointsMaterial({ color: 0xFF5500, size: 0.06, transparent:true, opacity:0.6 });
+  const particles = new THREE.Points(partGeo, partMat);
+  scene.add(particles);
+
+  // GRID FLOOR
+  const gridHelper = new THREE.GridHelper(20, 30, 0xFF5500, 0x1a1a1a);
+  gridHelper.position.y = -0.5;
+  gridHelper.material.opacity = 0.25;
+  gridHelper.material.transparent = true;
+  scene.add(gridHelper);
+
+  // Mouse parallax
+  let targetRY = 0, currentRY = 0;
+  let targetRX = 0, currentRX = 0;
+  document.addEventListener('mousemove',e=>{
+    targetRY = ((e.clientX/window.innerWidth)-.5)*.4;
+    targetRX = ((e.clientY/window.innerHeight)-.5)*.1;
+  });
+
+  let frameCount = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    frameCount++;
+
+    // Smooth camera mouse follow
+    currentRY += (targetRY - currentRY) * 0.04;
+    currentRX += (targetRX - currentRX) * 0.04;
+    camera.position.x = Math.sin(currentRY) * 2;
+    camera.position.y = 1 + currentRX;
+    camera.lookAt(0.5, 0.3, 0);
+
+    // Auto rotate moto
+    moto.rotation.y = -0.4 + Math.sin(frameCount*0.008)*0.15 + currentRY*0.3;
+
+    // Animate wheels
+    const wheelSpeed = 0.02;
+    frontWheel.rotation.x += wheelSpeed;
+    rearWheel.rotation.x += wheelSpeed;
+
+    // Particle float
+    particles.rotation.y += 0.0008;
+    particles.rotation.x += 0.0003;
+
+    // Pulse point lights
+    pointLight.intensity = 3 + Math.sin(frameCount*0.05)*0.8;
+    glowLight.intensity = 2 + Math.sin(frameCount*0.07)*0.5;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Resize
+  window.addEventListener('resize',()=>{
+    const w = canvas.parentElement.offsetWidth;
+    const h = canvas.parentElement.offsetHeight;
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  });
+})();
+
+// ---- GSAP SCROLL ANIMATIONS ----
+if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.fromTo('.brand-card',
+    { y: 60, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease:'power3.out',
+      scrollTrigger:{ trigger:'#marcas', start:'top 75%' }
+    }
+  );
+  gsap.fromTo('.service-card',
+    { y: 40, opacity: 0, scale: 0.95 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.1, ease:'power3.out',
+      scrollTrigger:{ trigger:'#servicos', start:'top 75%' }
+    }
+  );
+  gsap.fromTo('.stat-card',
+    { x: -30, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.6, stagger: 0.12, ease:'power3.out',
+      scrollTrigger:{ trigger:'#sobre', start:'top 70%' }
+    }
+  );
+}
+</script>
+</body>
+</html>
