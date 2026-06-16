@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <style>
@@ -91,8 +90,8 @@ nav.scrolled{background:rgba(9,9,9,0.88);backdrop-filter:blur(20px);border-botto
 
 /* HERO */
 #hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000}
-#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
-.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,rgba(255,85,0,0.1) 0%,rgba(0,0,0,0.65) 55%,rgba(0,0,0,0.97) 100%)}
+#hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
+.hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0.45) 50%,rgba(0,0,0,0.78) 100%)}
 .hero-content{position:relative;z-index:10;text-align:center;max-width:960px;padding:0 24px}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--orange);margin-bottom:24px;opacity:0;animation:fadeInUp .6s 1.2s forwards;background:rgba(255,85,0,0.1);border:1px solid rgba(255,85,0,0.25);padding:8px 18px;border-radius:40px}
 .hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 1.5s ease-in-out infinite}
@@ -478,7 +477,9 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 
 <!-- HERO -->
 <section id="hero">
-  <canvas id="hero-canvas"></canvas>
+  <video id="hero-video" autoplay muted loop playsinline>
+    <source src="hero-mota.mp4" type="video/mp4">
+  </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">Penafiel · Portugal · Concessionário Oficial</div>
@@ -1474,213 +1475,11 @@ function handleForm(e){
   e.target.reset();
 }
 
-// ---- THREE.JS HERO – CIRCUIT DE PISTA ----
+// ---- HERO VIDEO FALLBACK ----
 (function(){
-  if(typeof THREE==='undefined') return;
-  const canvas=document.getElementById('hero-canvas');
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(canvas.offsetWidth,canvas.offsetHeight);
-  renderer.setClearColor(0x000000,1);
-
-  const scene=new THREE.Scene();
-  scene.fog=new THREE.FogExp2(0x000000,0.038);
-
-  const camera=new THREE.PerspectiveCamera(72,canvas.offsetWidth/canvas.offsetHeight,0.05,300);
-
-  // LIGHTING
-  scene.add(new THREE.AmbientLight(0x111122,0.6));
-  const sun=new THREE.DirectionalLight(0xFF8800,2.5);
-  sun.position.set(15,25,10); scene.add(sun);
-  [[12,12,8,'ff9900'],[-12,12,-8,'ff6600'],[0,12,16,'ffffff']].forEach(([x,y,z,c])=>{
-    const l=new THREE.PointLight(parseInt('0x'+c),2.5,35);
-    l.position.set(x,y,z); scene.add(l);
-    const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,y,6),new THREE.MeshPhongMaterial({color:0x333333}));
-    pole.position.set(x,y/2,z); scene.add(pole);
-    const lamp=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.15,0.15),new THREE.MeshPhongMaterial({color:0xffffff,emissive:0xddddaa}));
-    lamp.position.set(x,y+0.1,z); scene.add(lamp);
-  });
-  const frontLight=new THREE.PointLight(0xffffff,4,6);
-  scene.add(frontLight);
-
-  // CIRCUIT PATH
-  const pts=[
-    [-9,0,0],[-5,0,0],[0,0,0],[5,0,0],
-    [9,0,2.5],[11.5,0,5.5],[11,0,9],
-    [8.5,0,11.5],[4,0,12.5],[0,0,12.5],[-4,0,12.5],
-    [-8,0,11],[-11,0,8],[-11.5,0,4.5],[-10,0,1.5],
-    [-9,0,0]
-  ].map(([x,y,z])=>new THREE.Vector3(x,y,z));
-  const circuit=new THREE.CatmullRomCurve3(pts,true,'catmullrom',0.5);
-
-  // TRACK SURFACE
-  const trackW=2.6;
-  const trackGeo=new THREE.TubeGeometry(circuit,300,trackW/2,5,true);
-  scene.add(new THREE.Mesh(trackGeo,new THREE.MeshLambertMaterial({color:0x1c1c1c,side:THREE.DoubleSide})));
-
-  // CURBS (red/white stripes on edge)
-  [trackW/2+0.08, -(trackW/2+0.08)].forEach(offset=>{
-    const curbPts=circuit.getPoints(400).map(p=>{
-      const t=circuit.getTangent(circuit.getUtoTmapping(0,p.length));
-      const n=new THREE.Vector3(-t.z,0,t.x).normalize().multiplyScalar(offset);
-      return p.clone().add(n);
-    });
-    const curbCurve=new THREE.CatmullRomCurve3(curbPts,true);
-    const curbGeo=new THREE.TubeGeometry(curbCurve,400,0.18,4,true);
-    const curbMesh=new THREE.Mesh(curbGeo,new THREE.MeshLambertMaterial({color:0xdd1111}));
-    scene.add(curbMesh);
-  });
-
-  // GRASS GROUND
-  const grassGeo=new THREE.PlaneGeometry(120,120);
-  const grass=new THREE.Mesh(grassGeo,new THREE.MeshLambertMaterial({color:0x071207}));
-  grass.rotation.x=-Math.PI/2; grass.position.y=-0.06; scene.add(grass);
-
-  // CENTER LINE
-  const clPts=circuit.getPoints(300);
-  const clGeo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(clPts,true),300,0.022,3,true);
-  scene.add(new THREE.Mesh(clGeo,new THREE.MeshBasicMaterial({color:0xffffff,opacity:0.55,transparent:true})));
-
-  // START/FINISH LINE
-  const sfGeo=new THREE.BoxGeometry(trackW+0.4,0.01,0.6);
-  const sfPos=circuit.getPoint(0);
-  const sf=new THREE.Mesh(sfGeo,new THREE.MeshBasicMaterial({color:0xffffff}));
-  sf.position.copy(sfPos); sf.position.y=0.01; scene.add(sf);
-
-  // RACING BIKE MODEL
-  const bike=new THREE.Group();
-  const mF=new THREE.MeshPhongMaterial({color:0xFF5500,shininess:380,specular:0xff9966,emissive:0x120400});
-  const mD=new THREE.MeshPhongMaterial({color:0x070707,shininess:200});
-  const mC=new THREE.MeshPhongMaterial({color:0xcccccc,shininess:500,specular:0xffffff});
-  const mG=new THREE.MeshPhongMaterial({color:0xFFAA00,shininess:420});
-  const mT=new THREE.MeshPhongMaterial({color:0x060606,shininess:10});
-  const mW=new THREE.MeshPhongMaterial({color:0x0a1824,transparent:true,opacity:0.5,shininess:380});
-
-  function b(geo,mat,x,y,z,rx,ry,rz){
-    const m=new THREE.Mesh(geo,mat);
-    m.position.set(x||0,y||0,z||0);
-    if(rx)m.rotation.x=rx; if(ry)m.rotation.y=ry; if(rz)m.rotation.z=rz;
-    bike.add(m); return m;
-  }
-  // Nose fairing
-  b(new THREE.BoxGeometry(0.26,0.32,0.42),mF,0,0.52,0.56,-0.1);
-  b(new THREE.BoxGeometry(0.21,0.19,0.26),mF,0,0.44,0.73,-0.15);
-  b(new THREE.BoxGeometry(0.3,0.22,0.44),mD,0,0.47,0.9);
-  // Side panels
-  [-0.135,0.135].forEach(x=>{
-    b(new THREE.BoxGeometry(0.045,0.29,0.62),mF,x,0.44,0.12);
-    b(new THREE.BoxGeometry(0.04,0.1,0.18),mD,x,0.72,0.72);
-  });
-  // Belly pan
-  b(new THREE.BoxGeometry(0.27,0.09,0.62),mF,0,0.17,0.1);
-  // Tank
-  b(new THREE.BoxGeometry(0.21,0.14,0.44),mF,0,0.6,0.04);
-  // Windscreen
-  b(new THREE.BoxGeometry(0.22,0.32,0.05),mW,0,0.74,0.52,-0.38);
-  // Headlights
-  [-0.075,0.075].forEach(x=>b(new THREE.BoxGeometry(0.08,0.04,0.03),new THREE.MeshPhongMaterial({color:0xffffff,emissive:0xddddaa}),x,0.56,0.79,-0.1));
-  // Seat/tail
-  b(new THREE.BoxGeometry(0.17,0.05,0.52),mD,0,0.6,-0.3);
-  b(new THREE.BoxGeometry(0.19,0.14,0.42),mF,0,0.57,-0.58,0.22);
-  // Tail light
-  b(new THREE.BoxGeometry(0.16,0.03,0.03),new THREE.MeshPhongMaterial({color:0xcc0000,emissive:0x440000}),0,0.5,-0.82);
-  // Exhaust
-  b(new THREE.CylinderGeometry(0.046,0.036,0.3,10),mG,0.14,0.49,-0.4,0.2,0,0.1);
-  // USD forks
-  [-0.07,0.07].forEach(x=>{
-    b(new THREE.CylinderGeometry(0.03,0.024,0.48,8),mG,x,0.44,0.58,0.2);
-    b(new THREE.CylinderGeometry(0.022,0.018,0.36,8),mC,x,0.25,0.64,0.2);
-  });
-  // Handlebars
-  b(new THREE.CylinderGeometry(0.01,0.01,0.32,6),mC,0,0.66,0.52,0,0,Math.PI/2);
-  // Brake discs
-  [-0.09,0.09].forEach(x=>b(new THREE.CylinderGeometry(0.22,0.22,0.016,18),mC,x,0,0.66,Math.PI/2));
-
-  function bWheel(r,zp){
-    const g=new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.TorusGeometry(r,0.078,16,42),mT));
-    g.add(new THREE.Mesh(new THREE.TorusGeometry(r-0.03,0.016,8,28),mC));
-    const hub=new THREE.Mesh(new THREE.CylinderGeometry(0.085,0.085,0.13,12),mC);
-    hub.rotation.x=Math.PI/2; g.add(hub);
-    const cap=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,0.04,10),mG);
-    cap.rotation.x=Math.PI/2; cap.position.z=0.07; g.add(cap);
-    for(let i=0;i<5;i++){
-      const sp=new THREE.Mesh(new THREE.BoxGeometry(0.03,2*(r-0.11),0.018),mC);
-      sp.rotation.z=(Math.PI/5)*2*i; g.add(sp);
-    }
-    g.position.set(0,0,zp); g.rotation.y=Math.PI/2;
-    return g;
-  }
-  const fw=bWheel(0.3,0.66);
-  const rw=bWheel(0.32,-0.62);
-  bike.add(fw); bike.add(rw);
-
-  bike.scale.set(0.38,0.38,0.38);
-  scene.add(bike);
-
-  // SPEED PARTICLES
-  const pG=new THREE.BufferGeometry();
-  const pP=new Float32Array(350*3);
-  for(let i=0;i<pP.length;i+=3){pP[i]=(Math.random()-0.5)*50;pP[i+1]=Math.random()*4;pP[i+2]=(Math.random()-0.5)*50;}
-  pG.setAttribute('position',new THREE.BufferAttribute(pP,3));
-  const sparks=new THREE.Points(pG,new THREE.PointsMaterial({color:0xFF5500,size:0.055,transparent:true,opacity:0.35}));
-  scene.add(sparks);
-
-  // ANIMATION
-  let t=0;
-  const SPEED=0.00085;
-
-  function animate(){
-    requestAnimationFrame(animate);
-    t=(t+SPEED)%1;
-
-    const bikePos=circuit.getPoint(t);
-    const bikeTangent=circuit.getTangent(t);
-    const bikeAngle=Math.atan2(bikeTangent.x,bikeTangent.z);
-
-    // Curvature banking
-    const tN=circuit.getTangent((t+0.012)%1);
-    const cross=new THREE.Vector3(-bikeTangent.z,0,bikeTangent.x);
-    const bankSign=cross.dot(tN);
-    const bankAmt=bankSign*5;
-
-    bike.position.copy(bikePos);
-    bike.position.y=0.11;
-    bike.rotation.y=bikeAngle;
-    bike.rotation.z=-bankAmt*0.28;
-
-    // Wheel spin
-    fw.rotation.x+=0.14; rw.rotation.x+=0.14;
-
-    // Headlight follows bike
-    frontLight.position.copy(bikePos).add(new THREE.Vector3(bikeTangent.x*0.5,0.25,bikeTangent.z*0.5));
-
-    // Camera: slightly behind + above, banking into corners
-    const tCam=((t-0.055+1)%1);
-    const camBase=circuit.getPoint(tCam);
-    const camTan=circuit.getTangent(tCam);
-    camera.position.set(
-      camBase.x-camTan.x*2.5,
-      bikePos.y+0.85,
-      camBase.z-camTan.z*2.5
-    );
-    // Look at a point slightly ahead of the bike
-    const lookAhead=circuit.getPoint((t+0.03)%1);
-    lookAhead.y+=0.15;
-    camera.lookAt(lookAhead);
-    camera.rotation.z=-bankAmt*0.055;
-
-    // Animate particles slightly
-    sparks.rotation.y+=0.0004;
-
-    renderer.render(scene,camera);
-  }
-  animate();
-
-  window.addEventListener('resize',()=>{
-    const w=canvas.parentElement.offsetWidth,h=canvas.parentElement.offsetHeight;
-    camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
-  });
+  const v=document.getElementById('hero-video');
+  if(!v) return;
+  v.addEventListener('error',()=>{v.style.display='none';});
 })();
 
 // ---- GSAP SCROLL ANIMATIONS ----
