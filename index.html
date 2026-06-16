@@ -91,7 +91,7 @@ nav.scrolled{background:rgba(9,9,9,0.88);backdrop-filter:blur(20px);border-botto
 /* HERO */
 #hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000}
 #hero-yt-bg{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
-#hero-yt-bg iframe{position:absolute;top:50%;left:50%;width:177.78vh;height:56.25vw;min-width:100%;min-height:100%;transform:translate(-50%,-50%);border:none;pointer-events:none}
+#hero-yt-bg iframe,#hero-yt-bg>div{position:absolute;top:50%;left:50%;width:177.78vh;height:56.25vw;min-width:100%;min-height:100%;transform:translate(-50%,-50%);border:none;pointer-events:none}
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0.45) 50%,rgba(0,0,0,0.78) 100%)}
 .hero-content{position:relative;z-index:10;text-align:center;max-width:960px;padding:0 24px}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--orange);margin-bottom:24px;opacity:0;animation:fadeInUp .6s 1.2s forwards;background:rgba(255,85,0,0.1);border:1px solid rgba(255,85,0,0.25);padding:8px 18px;border-radius:40px}
@@ -479,13 +479,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 <!-- HERO -->
 <section id="hero">
   <div id="hero-yt-bg">
-    <iframe
-      src="https://www.youtube.com/embed/uDKAVvZRTtI?autoplay=1&mute=1&loop=1&controls=0&disablekb=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&playlist=uDKAVvZRTtI"
-      allow="autoplay; encrypted-media"
-      allowfullscreen
-      frameborder="0"
-      title="background video">
-    </iframe>
+    <div id="hero-yt-iframe"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -1482,12 +1476,58 @@ function handleForm(e){
   e.target.reset();
 }
 
-// ---- HERO YOUTUBE BG FALLBACK ----
+// ---- HERO YOUTUBE BG – sempre a tocar, impossível de pausar ----
 (function(){
-  const bg=document.getElementById('hero-yt-bg');
-  if(!bg) return;
-  const iframe=bg.querySelector('iframe');
-  if(iframe) iframe.addEventListener('error',()=>{bg.style.display='none';});
+  var ytReady=false, ytPlayer=null;
+  var VIDEO_ID='uDKAVvZRTtI';
+
+  // Injeta o script da YouTube IFrame API
+  var tag=document.createElement('script');
+  tag.src='https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+
+  window.onYouTubeIframeAPIReady=function(){
+    ytReady=true;
+    ytPlayer=new YT.Player('hero-yt-iframe',{
+      videoId:VIDEO_ID,
+      playerVars:{
+        autoplay:1,controls:0,loop:1,mute:1,
+        playlist:VIDEO_ID,rel:0,showinfo:0,
+        modestbranding:1,iv_load_policy:3,disablekb:1,
+        enablejsapi:1,playsinline:1
+      },
+      events:{
+        onReady:function(e){
+          e.target.mute();
+          e.target.playVideo();
+          // Aplica pointer-events:none ao iframe gerado
+          var iframeEl=document.querySelector('#hero-yt-iframe iframe');
+          if(iframeEl) iframeEl.style.pointerEvents='none';
+        },
+        onStateChange:function(e){
+          // Se parar ou pausar por qualquer motivo, recomeça imediatamente
+          if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.CUED){
+            e.target.playVideo();
+          }
+        },
+        onError:function(){
+          // Fallback: esconde o bloco de vídeo, o overlay cobre tudo
+          var bg=document.getElementById('hero-yt-bg');
+          if(bg) bg.style.display='none';
+        }
+      }
+    });
+  };
+
+  // Garante que o vídeo continua mesmo se a API demorar
+  var guard=setInterval(function(){
+    if(ytPlayer&&typeof ytPlayer.getPlayerState==='function'){
+      var st=ytPlayer.getPlayerState();
+      if(st===YT.PlayerState.PAUSED||st===2||st===-1){
+        try{ytPlayer.playVideo();}catch(e){}
+      }
+    }
+  },2000);
 })();
 
 // ---- GSAP SCROLL ANIMATIONS ----
