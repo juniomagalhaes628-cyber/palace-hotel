@@ -188,7 +188,7 @@ section{padding:100px 0}
 .mota-front,.mota-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--border);border-radius:4px;overflow:hidden}
 .mota-back{transform:rotateY(180deg);background:var(--bg3);display:flex;flex-direction:column;justify-content:center;padding:32px;border-color:var(--border-orange)}
 .mota-img-wrap{height:220px;overflow:hidden;background:var(--bg3);position:relative}
-.mota-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.mota-img-wrap img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
 .mota-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent 60%)}
 .mota-badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2}
 .badge{font-family:var(--cond);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:2px}
@@ -217,7 +217,7 @@ section{padding:100px 0}
 .usada-card{background:var(--bg3);border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:border-color .3s,transform .3s;cursor:none}
 .usada-card:hover{border-color:var(--border-orange);transform:translateY(-4px)}
 .usada-img{height:200px;overflow:hidden;position:relative;background:var(--bg4)}
-.usada-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.usada-img img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .usada-card:hover .usada-img img{transform:scale(1.05)}
 .usada-body{padding:20px}
 .usada-name{font-family:var(--cond);font-size:22px;font-weight:800;text-transform:uppercase;margin-bottom:4px}
@@ -620,7 +620,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
         <div class="mota-card-inner">
           <div class="mota-front">
             <div class="mota-img-wrap">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/2025_Honda_CRF1100L_Africa_Twin_DCT.jpg/800px-2025_Honda_CRF1100L_Africa_Twin_DCT.jpg" alt="Macbor Montana XR5 510" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/2025_Honda_CRF1100L_Africa_Twin_DCT.jpg/800px-2025_Honda_CRF1100L_Africa_Twin_DCT.jpg" alt="Macbor Montana XR5 510" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
               <div class="mota-badges">
                 <span class="badge badge-brand">Macbor</span>
                 <span class="badge badge-hot">Destaque</span>
@@ -653,7 +653,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
         <div class="mota-card-inner">
           <div class="mota-front">
             <div class="mota-img-wrap">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Macbor_Rockster_710.jpg/800px-Macbor_Rockster_710.jpg" alt="Macbor Rockster 410" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Macbor_Rockster_710.jpg/800px-Macbor_Rockster_710.jpg" alt="Macbor Rockster 410" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
               <div class="mota-badges">
                 <span class="badge badge-brand">Macbor</span>
                 <span class="badge badge-new">Novo</span>
@@ -686,7 +686,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
         <div class="mota-card-inner">
           <div class="mota-front">
             <div class="mota-img-wrap">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/CBR125R_JC50.JPG/800px-CBR125R_JC50.JPG" alt="Macbor Eight Mile 125" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/CBR125R_JC50.JPG/800px-CBR125R_JC50.JPG" alt="Macbor Eight Mile 125" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
               <div class="mota-badges">
                 <span class="badge badge-brand">Macbor</span>
                 <span class="badge badge-new">125cc</span>
@@ -719,7 +719,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
         <div class="mota-card-inner">
           <div class="mota-front">
             <div class="mota-img-wrap">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Baujahr_2014_Yamaha_WR125R.jpg/800px-Baujahr_2014_Yamaha_WR125R.jpg" alt="Macbor Montana XR1 125 EVO" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/GasGas_EC_125_2006.JPG/800px-GasGas_EC_125_2006.JPG" alt="Macbor Montana XR1 125 EVO" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Macbor</div></div>
               <div class="mota-badges">
                 <span class="badge badge-brand">Macbor</span>
                 <span class="badge badge-new">125cc</span>
@@ -927,7 +927,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 
       <div class="usada-card reveal reveal-d3">
         <div class="usada-img">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/20250701_Honda_CB500F_in_Lucca.JPG/800px-20250701_Honda_CB500F_in_Lucca.JPG" alt="Honda CB500F" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Honda</div></div>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Salon_de_la_Moto_et_du_Scooter_de_Paris_2013_-_Honda_-_CB500F_-_010.jpg/800px-Salon_de_la_Moto_et_du_Scooter_de_Paris_2013_-_Honda_-_CB500F_-_010.jpg" alt="Honda CB500F" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="img-placeholder" style="display:none"><svg viewBox="0 0 24 24"><path d="M3 17l4-8h10l4 8"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg><span>Foto em Breve</span><div class="ph-brand">Honda</div></div>
           <div class="mota-badges" style="position:absolute;top:12px;left:12px">
             <span class="badge badge-brand">Honda</span>
             <span class="badge badge-used">Usado</span>
