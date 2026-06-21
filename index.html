@@ -428,6 +428,27 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
+/* ---- VIEW SWITCHING ---- */
+body.view-home #novas,body.view-home #usadas{display:none!important}
+body.view-stock #hero,body.view-stock .marquee-wrap,body.view-stock #marcas,
+body.view-stock #servicos,body.view-stock #cta-strip,body.view-stock #testemunhos,
+body.view-stock #sobre,body.view-stock #contacto{display:none!important}
+.stock-hero{display:none;padding:110px 0 40px;background:var(--bg);border-bottom:1px solid var(--border)}
+body.view-stock .stock-hero{display:block}
+.stock-hero-inner{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.stock-back{display:inline-flex;align-items:center;gap:8px;color:var(--text-dim);font-family:var(--cond);font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;border:1px solid var(--border);border-radius:3px;padding:10px 20px;transition:color .2s,border-color .2s;flex-shrink:0}
+.stock-back:hover{color:#fff;border-color:var(--orange)}
+.stock-back svg{transition:transform .2s}
+.stock-back:hover svg{transform:translateX(-3px)}
+.stock-hero-title{font-family:var(--cond);font-size:clamp(32px,5vw,56px);font-weight:900;letter-spacing:-.01em;line-height:1;color:var(--text)}
+.stock-hero-title span{color:var(--orange)}
+.stock-hero-sub{font-size:14px;color:var(--text-dim);margin-top:6px;letter-spacing:.05em}
+/* Nav link overrides in stock view */
+body.view-stock .nav-home-only{display:none}
+body.view-stock .btn-nav{display:none}
+body.view-stock .nav-stock-back{display:inline-flex!important}
+.nav-stock-back{display:none;align-items:center;gap:6px;color:var(--text-dim);font-family:var(--cond);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:3px;transition:all .2s}
+.nav-stock-back:hover{color:#fff;border-color:var(--orange)}
 </style>
 </head>
 <body>
@@ -450,16 +471,17 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 <nav id="navbar">
   <a href="#" class="nav-logo">GP<span>MOTORS</span></a>
   <ul class="nav-links">
-    <li><a href="#marcas">Marcas</a></li>
-    <li><a href="#novas">Motas Novas</a></li>
-    <li><a href="#usadas">Motas Usadas</a></li>
-    <li><a href="#servicos">Serviços</a></li>
-    <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#contacto">Contacto</a></li>
+    <li class="nav-home-only"><a href="./#marcas">Marcas</a></li>
+    <li><a href="?stock#novas">Motas Novas</a></li>
+    <li><a href="?stock#usadas">Motas Usadas</a></li>
+    <li class="nav-home-only"><a href="./#servicos">Serviços</a></li>
+    <li class="nav-home-only"><a href="./#sobre">Sobre</a></li>
+    <li class="nav-home-only"><a href="./#contacto">Contacto</a></li>
   </ul>
   <div class="nav-right">
     <a href="tel:917091765" class="nav-phone">917 091 765</a>
-    <a href="#novas" class="btn-nav">Ver Stock</a>
+    <a href="./" class="nav-stock-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Início</a>
+    <a href="?stock" class="btn-nav">Ver Stock</a>
     <button class="hamburger" id="ham-btn" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -468,12 +490,25 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 
 <!-- MOBILE DRAWER -->
 <div id="nav-drawer">
-  <a href="#marcas" class="drawer-link">Marcas</a>
-  <a href="#novas" class="drawer-link">Motas Novas</a>
-  <a href="#usadas" class="drawer-link">Motas Usadas</a>
-  <a href="#servicos" class="drawer-link">Serviços</a>
-  <a href="#sobre" class="drawer-link">Sobre</a>
-  <a href="#contacto" class="drawer-link">Contacto</a>
+  <a href="./#marcas" class="drawer-link nav-home-only">Marcas</a>
+  <a href="?stock#novas" class="drawer-link">Motas Novas</a>
+  <a href="?stock#usadas" class="drawer-link">Motas Usadas</a>
+  <a href="./#servicos" class="drawer-link nav-home-only">Serviços</a>
+  <a href="./#sobre" class="drawer-link nav-home-only">Sobre</a>
+  <a href="./#contacto" class="drawer-link nav-home-only">Contacto</a>
+  <a href="./" class="drawer-link nav-stock-back" style="display:none">← Voltar ao Início</a>
+</div>
+
+<!-- STOCK HERO -->
+<div class="stock-hero">
+  <div class="container stock-hero-inner">
+    <a href="./" class="stock-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Voltar ao Início</a>
+    <div>
+      <div class="section-label">GP Motors — Penafiel</div>
+      <div class="stock-hero-title">Stock <span>Disponível</span></div>
+      <div class="stock-hero-sub">Motas Novas · Motas Usadas · Quads / ATV</div>
+    </div>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -496,8 +531,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
     </h1>
     <p class="hero-sub">TGB &nbsp;·&nbsp; Macbor &nbsp;·&nbsp; Cyclone</p>
     <div class="hero-ctas">
-      <a href="#novas" class="btn-primary magnetic">Ver Stock Novo</a>
-      <a href="#usadas" class="btn-outline magnetic">Motas Usadas</a>
+      <a href="?stock#novas" class="btn-primary magnetic">Ver Stock Novo</a>
+      <a href="?stock#usadas" class="btn-outline magnetic">Motas Usadas</a>
     </div>
   </div>
   <div class="scroll-indicator">
@@ -564,7 +599,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
           <div class="brand-name">TGB</div>
           <div class="brand-type">Quads & ATV</div>
           <p class="brand-desc">Concessionário oficial TGB em Penafiel. Quads e ATVs de alta performance para todo o terreno, com modelos desde 300cc a 1000cc.</p>
-          <a href="#novas" class="brand-arrow">Ver Modelos TGB <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="?stock#novas" class="brand-arrow">Ver Modelos TGB <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>
       </div>
       <!-- MACBOR -->
@@ -576,7 +611,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
           <div class="brand-name">Macbor</div>
           <div class="brand-type">Trail · Naked · Adventure</div>
           <p class="brand-desc">A Macbor combina design europeu com tecnologia de ponta. Montana XR5 510, Rockster 410, Eight Mile 125 e mais — motas para cada estilo.</p>
-          <a href="#novas" class="brand-arrow">Ver Modelos Macbor <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="?stock#novas" class="brand-arrow">Ver Modelos Macbor <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>
       </div>
       <!-- CYCLONE -->
@@ -588,7 +623,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
           <div class="brand-name">Cyclone</div>
           <div class="brand-type">Trail · Sport 125cc</div>
           <p class="brand-desc">A Cyclone traz o espírito aventureiro com a Carrera 125 — trail moderna com motor 125cc, rodas de raio e iluminação LED completa.</p>
-          <a href="#novas" class="brand-arrow">Ver Modelos Cyclone <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="?stock#novas" class="brand-arrow">Ver Modelos Cyclone <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>
       </div>
     </div>
@@ -1297,8 +1332,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
       <div class="footer-col">
         <h4>Motas</h4>
         <ul>
-          <li><a href="#novas">Motas Novas</a></li>
-          <li><a href="#usadas">Motas Usadas</a></li>
+          <li><a href="?stock#novas">Motas Novas</a></li>
+          <li><a href="?stock#usadas">Motas Usadas</a></li>
           <li><a href="#marcas">Macbor</a></li>
           <li><a href="#marcas">TGB</a></li>
           <li><a href="#marcas">Cyclone</a></li>
@@ -1343,6 +1378,24 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 </a>
 
 <script>
+// ---- VIEW ROUTING ----
+(function(){
+  const isStock = location.search.includes('stock');
+  document.body.classList.add(isStock ? 'view-stock' : 'view-home');
+  // Show mobile drawer back link in stock view
+  const drawerBack = document.querySelector('#nav-drawer .nav-stock-back');
+  if(drawerBack && isStock) drawerBack.style.display = 'block';
+  // After view applied, scroll to hash target if present
+  if(isStock && location.hash){
+    window.addEventListener('load', function(){
+      setTimeout(function(){
+        const el = document.querySelector(location.hash);
+        if(el) el.scrollIntoView({behavior:'smooth'});
+      }, 300);
+    });
+  }
+})();
+
 // ---- LOADER ----
 (function(){
   const loader = document.getElementById('loader');
